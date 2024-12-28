@@ -1,6 +1,5 @@
 package ecommerce.productService.product.domain;
 
-import ecommerce.productService.seller.domain.Seller;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,9 +27,8 @@ public class Store {
 	@Column(name = "store_license", nullable = false, length = 50)
 	private String storeLicense;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "seller_seq", nullable = false)
-	private Seller seller;
+	@Column(name = "seller_seq", nullable = false)
+	private Long sellerSeq;
 
 	@OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Product> products;
