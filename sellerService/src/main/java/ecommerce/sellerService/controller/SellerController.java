@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ecommerce.sellerService.service.SellerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,7 +26,7 @@ public class SellerController {
 	private final SellerService sellerService;
 
 	@PostMapping
-	public ResponseEntity<SellerResponse> registerSeller(@RequestBody SellerRequest sellerRequest) {
+	public ResponseEntity<SellerResponse> registerSeller(@Valid @RequestBody SellerRequest sellerRequest) {
 		SellerResponse sellerResponse = toSellerResponse(sellerService.registerSeller(toSeller(sellerRequest)));
 		return ResponseEntity.ok(sellerResponse);
 	}
@@ -47,7 +47,8 @@ public class SellerController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<SellerResponse> updateSeller(@PathVariable Long id, @RequestBody SellerRequest sellerRequest) {
+	public ResponseEntity<SellerResponse> updateSeller(@PathVariable Long id,
+		@Valid @RequestBody SellerRequest sellerRequest) {
 		SellerResponse sellerResponse = toSellerResponse(sellerService.updateSeller(id, toSeller(sellerRequest)));
 		return ResponseEntity.ok(sellerResponse);
 	}
