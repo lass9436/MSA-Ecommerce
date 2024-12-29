@@ -29,4 +29,16 @@ public class Seller {
 
 	@Column(name = "seller_name", nullable = false, length = 50)
 	private String sellerName;
+
+	public Seller(String sellerId, String sellerPassword, String sellerName) {
+		this.sellerId = sellerId;
+		this.sellerPassword = sellerPassword;
+		this.sellerName = sellerName;
+	}
+
+	public void update(Seller updateSeller) {
+		this.sellerId = updateSeller.getSellerId();
+		this.sellerPassword = updateSeller.getSellerPassword();
+		this.sellerName = updateSeller.getSellerName();
+	}
 }
