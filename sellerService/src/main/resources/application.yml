@@ -1,0 +1,8 @@
+server:
+  port: 9020
+
+spring:
+  application:
+    name: sellerService
+  jpa:
+    open-in-view: false

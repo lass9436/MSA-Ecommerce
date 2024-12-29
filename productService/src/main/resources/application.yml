@@ -1,0 +1,8 @@
+server:
+  port: 9010
+
+spring:
+  application:
+    name: productService
+  jpa:
+    open-in-view: false
