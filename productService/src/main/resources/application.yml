@@ -6,3 +6,7 @@ spring:
     name: productService
   jpa:
     open-in-view: false
+
+seller:
+  service:
+    url: http://localhost:9020

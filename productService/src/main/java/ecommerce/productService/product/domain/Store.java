@@ -33,4 +33,11 @@ public class Store {
 	@OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Product> products;
 
+	public Store(String storeName, String storeAccountNumber, String storeLicense, Long sellerSeq) {
+		this.storeName = storeName;
+		this.storeAccountNumber = storeAccountNumber;
+		this.storeLicense = storeLicense;
+		this.sellerSeq = sellerSeq;
+	}
+
 }
