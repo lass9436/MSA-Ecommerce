@@ -24,7 +24,7 @@ public class Store {
 	@Column(name = "store_account_number", nullable = false, length = 50)
 	private String storeAccountNumber;
 
-	@Column(name = "store_license", nullable = false, length = 50)
+	@Column(name = "store_license", nullable = false, length = 50, unique = true)
 	private String storeLicense;
 
 	@Column(name = "seller_seq", nullable = false)
@@ -40,4 +40,10 @@ public class Store {
 		this.sellerSeq = sellerSeq;
 	}
 
+	public void update(Store updateStore) {
+		this.storeName = updateStore.getStoreName();
+		this.storeAccountNumber = updateStore.getStoreAccountNumber();
+		this.storeLicense = updateStore.getStoreLicense();
+		this.sellerSeq = updateStore.getSellerSeq();
+	}
 }
