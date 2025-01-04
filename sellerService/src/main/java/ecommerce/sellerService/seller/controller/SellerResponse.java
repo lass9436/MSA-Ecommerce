@@ -1,4 +1,4 @@
-package ecommerce.sellerService.controller;
+package ecommerce.sellerService.seller.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

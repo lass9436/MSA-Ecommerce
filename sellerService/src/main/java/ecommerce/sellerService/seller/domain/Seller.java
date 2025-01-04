@@ -1,4 +1,4 @@
-package ecommerce.sellerService.domain;
+package ecommerce.sellerService.seller.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

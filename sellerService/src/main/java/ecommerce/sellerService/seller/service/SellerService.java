@@ -1,13 +1,13 @@
-package ecommerce.sellerService.service;
+package ecommerce.sellerService.seller.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ecommerce.sellerService.domain.Seller;
+import ecommerce.sellerService.seller.domain.Seller;
 import ecommerce.sellerService.exception.EntityNotFoundException;
-import ecommerce.sellerService.repository.SellerRepository;
+import ecommerce.sellerService.seller.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service

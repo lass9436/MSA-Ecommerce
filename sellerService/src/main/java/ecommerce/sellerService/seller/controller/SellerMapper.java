@@ -1,6 +1,6 @@
-package ecommerce.sellerService.controller;
+package ecommerce.sellerService.seller.controller;
 
-import ecommerce.sellerService.domain.Seller;
+import ecommerce.sellerService.seller.domain.Seller;
 
 public class SellerMapper {
 
