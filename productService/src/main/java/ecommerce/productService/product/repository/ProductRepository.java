@@ -1,4 +1,8 @@
 package ecommerce.productService.product.repository;
 
-public class ProductRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import ecommerce.productService.product.domain.Product;
+
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }

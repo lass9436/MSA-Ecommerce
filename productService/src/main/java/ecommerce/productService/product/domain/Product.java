@@ -32,5 +32,30 @@ public class Product {
 	@JoinColumn(name = "store_id", nullable = false)
 	private Store store;
 
+	public Product(String productName, String productCategory, Integer productQuantity, Long productPrice) {
+		this.productName = productName;
+		this.productCategory = productCategory;
+		this.productQuantity = productQuantity;
+		this.productPrice = productPrice;
+	}
+
+	public void update(Product updateProduct, Store store) {
+		this.productName = updateProduct.getProductName();
+		this.productCategory = updateProduct.getProductCategory();
+		this.productQuantity = updateProduct.getProductQuantity();
+		this.productPrice = updateProduct.getProductPrice();
+		this.store = store;
+	}
+
+	public void assignStore(Store store) {
+		if (this.store != null) {
+			this.store.getProducts().remove(this);
+		}
+		this.store = store;
+
+		if (store != null) {
+			store.getProducts().add(this);
+		}
+	}
 }
 
