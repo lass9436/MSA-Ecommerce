@@ -37,6 +37,9 @@ public class SellerService {
 	}
 
 	public void deleteSeller(Long id) {
+		if (!sellerRepository.existsById(id)) {
+			throw new EntityNotFoundException("Seller with ID " + id + " not found");
+		}
 		sellerRepository.deleteById(id);
 	}
 }

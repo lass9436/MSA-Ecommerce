@@ -30,16 +30,19 @@ public class StoreService {
 	}
 
 	public Store findById(Long id) {
-		return storeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Store not found."));
+		return storeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Store with ID " + id + " not found."));
 	}
 
 	public Store updateStore(Long id, Store updateStore) {
-		Store store = storeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Store not found."));
+		Store store = storeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Store with ID " + id + " not found."));
 		store.update(updateStore);
 		return store;
 	}
 
 	public void deleteStore(Long id) {
+		if(!storeRepository.existsById(id)) {
+			throw new EntityNotFoundException("Store with ID " + id + " not found.");
+		}
 		storeRepository.deleteById(id);
 	}
 }

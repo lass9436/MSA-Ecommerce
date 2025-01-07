@@ -22,7 +22,7 @@ public class ProductService {
 
 	public Product registerProduct(Long storeId, Product product) {
 		Store store = storeRepository.findById(storeId)
-			.orElseThrow(() -> new EntityNotFoundException("Store not found."));
+			.orElseThrow(() -> new EntityNotFoundException("Store with ID " + storeId + " not found."));
 		product.assignStore(store);
 		return productRepository.save(product);
 	}
@@ -33,23 +33,19 @@ public class ProductService {
 
 	public Product findById(Long id) {
 		return productRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Product not found."));
+			.orElseThrow(() -> new EntityNotFoundException("Product with ID " + id + " not found."));
 	}
 
-	public Product updateProduct(Long id, Long storeId, Product updateProduct) {
+	public Product updateProduct(Long id, Product updateProduct) {
 		Product product = productRepository.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Product not found."));
-
-		Store store = storeRepository.findById(storeId)
-			.orElseThrow(() -> new EntityNotFoundException("Store not found."));
-
-		product.update(updateProduct, store);
+			.orElseThrow(() -> new EntityNotFoundException("Product with ID " + id + " not found."));
+		product.update(updateProduct);
 		return product;
 	}
 
 	public void deleteProduct(Long id) {
 		if (!productRepository.existsById(id)) {
-			throw new EntityNotFoundException("Product not found.");
+			throw new EntityNotFoundException("Product with ID " + id + " not found.");
 		}
 		productRepository.deleteById(id);
 	}

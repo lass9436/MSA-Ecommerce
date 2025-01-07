@@ -48,7 +48,7 @@ public class ProductController {
 
 	@PutMapping("/{id}")
 	public ApiResult<ProductResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
-		return ApiResult.success(toProductResponse(productService.updateProduct(id, productRequest.getStoreId(), toProduct(productRequest))));
+		return ApiResult.success(toProductResponse(productService.updateProduct(id, toProduct(productRequest))));
 	}
 
 	@DeleteMapping("/{id}")

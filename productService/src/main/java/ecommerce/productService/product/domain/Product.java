@@ -39,23 +39,16 @@ public class Product {
 		this.productPrice = productPrice;
 	}
 
-	public void update(Product updateProduct, Store store) {
+	public void update(Product updateProduct) {
 		this.productName = updateProduct.getProductName();
 		this.productCategory = updateProduct.getProductCategory();
 		this.productQuantity = updateProduct.getProductQuantity();
 		this.productPrice = updateProduct.getProductPrice();
-		this.store = store;
 	}
 
 	public void assignStore(Store store) {
-		if (this.store != null) {
-			this.store.getProducts().remove(this);
-		}
 		this.store = store;
-
-		if (store != null) {
-			store.getProducts().add(this);
-		}
+		store.getProducts().add(this);
 	}
 }
 
