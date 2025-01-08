@@ -16,7 +16,7 @@ public class User {
 	@Column(name = "user_seq")
 	private Long userSeq;
 
-	@Column(name = "user_id", nullable = false, length = 50)
+	@Column(name = "user_id", nullable = false, length = 50, unique = true)
 	private String userId;
 
 	@Column(name = "user_password", nullable = false, length = 50)
@@ -25,4 +25,15 @@ public class User {
 	@Column(name = "user_name", nullable = false, length = 50)
 	private String userName;
 
+	public User (String userId, String userPassword, String userName) {
+		this.userId = userId;
+		this.userPassword = userPassword;
+		this.userName = userName;
+	}
+
+	public void update(User updatedUser) {
+		this.userId = updatedUser.getUserId();
+		this.userPassword = updatedUser.getUserPassword();
+		this.userName = updatedUser.getUserName();
+	}
 }

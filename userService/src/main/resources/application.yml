@@ -1,0 +1,8 @@
+server:
+  port: 9030
+
+spring:
+  application:
+    name: userService
+  jpa:
+    open-in-view: false
