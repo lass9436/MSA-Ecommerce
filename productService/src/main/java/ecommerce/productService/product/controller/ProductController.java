@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ecommerce.productService.global.ApiResult;
-import ecommerce.productService.product.domain.Store;
 import ecommerce.productService.product.service.ProductService;
-import ecommerce.productService.product.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
