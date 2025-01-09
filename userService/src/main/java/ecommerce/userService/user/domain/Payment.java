@@ -8,7 +8,6 @@ import lombok.ToString;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 @Entity
 @Table(name = "payment")
 public class Payment {
@@ -27,10 +26,27 @@ public class Payment {
 	@Column(nullable = false, length = 50)
 	private String paymentName;
 
-	@Column(nullable = false, length = 50)
+	@Column(length = 50)
 	private String accountNumber;
 
-	@Column(nullable = false, length = 50)
+	@Column(length = 50)
 	private String cardNumber;
 
+	public Payment(String paymentType, String paymentName, String accountNumber, String cardNumber) {
+		this.paymentType = paymentType;
+		this.paymentName = paymentName;
+		this.accountNumber = accountNumber;
+		this.cardNumber = cardNumber;
+	}
+
+	public void update(Payment updatePayment) {
+		this.paymentType = updatePayment.getPaymentType();
+		this.paymentName = updatePayment.getPaymentName();
+		this.accountNumber = updatePayment.getAccountNumber();
+		this.cardNumber = updatePayment.getCardNumber();
+	}
+
+	public void assignUser(User user) {
+		this.user = user;
+	}
 }
