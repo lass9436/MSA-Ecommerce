@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ecommerce.productService.exception.EntityNotFoundException;
+import ecommerce.productService.product.controller.ProductBulkDecreaseRequest;
+import ecommerce.productService.product.controller.ProductBulkDecreaseRequestDetail;
 import ecommerce.productService.product.domain.Product;
 import ecommerce.productService.product.domain.Store;
 import ecommerce.productService.product.repository.ProductRepository;
 import ecommerce.productService.product.repository.StoreRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -48,5 +51,27 @@ public class ProductService {
 			throw new EntityNotFoundException("Product with ID " + id + " not found.");
 		}
 		productRepository.deleteById(id);
+	}
+
+	public void bulkDecreaseProduct(ProductBulkDecreaseRequest productBulkDecreaseRequest) {
+		List<Long> productIds = productBulkDecreaseRequest.getDetails().stream()
+			.map(ProductBulkDecreaseRequestDetail::getProductId)
+			.toList();
+
+		List<Product> products = productRepository.findByProductIdsWithLock(productIds);
+
+		if (products.size() != productIds.size()) {
+			throw new EntityNotFoundException("One or more Product IDs not found.");
+		}
+
+		for (ProductBulkDecreaseRequestDetail detail : productBulkDecreaseRequest.getDetails()) {
+			Product product = products.stream()
+				.filter(p -> p.getProductId().equals(detail.getProductId()))
+				.findFirst()
+				.orElseThrow(
+					() -> new EntityNotFoundException("Product with ID " + detail.getProductId() + " not found."));
+
+			product.decreaseStock(detail.getDecreaseQuantity());
+		}
 	}
 }

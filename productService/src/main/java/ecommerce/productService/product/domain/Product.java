@@ -50,5 +50,12 @@ public class Product {
 		this.store = store;
 		store.getProducts().add(this);
 	}
+
+	public void decreaseStock(Long quantity) {
+		if (this.productQuantity < quantity) {
+			throw new IllegalArgumentException("Insufficient stock for Product ID " + this.productId);
+		}
+		this.productQuantity -= quantity.intValue();
+	}
 }
 

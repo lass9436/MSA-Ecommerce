@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,7 +28,8 @@ public class ProductController {
 
 	@PostMapping
 	public ApiResult<ProductResponse> registerProduct(@Valid @RequestBody ProductRequest productRequest) {
-		return ApiResult.success(toProductResponse(productService.registerProduct(productRequest.getStoreId(), toProduct(productRequest))));
+		return ApiResult.success(
+			toProductResponse(productService.registerProduct(productRequest.getStoreId(), toProduct(productRequest))));
 	}
 
 	@GetMapping
@@ -45,7 +47,8 @@ public class ProductController {
 	}
 
 	@PutMapping("/{id}")
-	public ApiResult<ProductResponse> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
+	public ApiResult<ProductResponse> updateProduct(@PathVariable Long id,
+		@Valid @RequestBody ProductRequest productRequest) {
 		return ApiResult.success(toProductResponse(productService.updateProduct(id, toProduct(productRequest))));
 	}
 
@@ -54,4 +57,12 @@ public class ProductController {
 		productService.deleteProduct(id);
 		return ApiResult.success(null);
 	}
+
+	@PatchMapping("/bulk-decrease")
+	public ApiResult<Void> bulkDecreaseProduct(
+		@Valid @RequestBody ProductBulkDecreaseRequest productBulkDecreaseRequest) {
+		productService.bulkDecreaseProduct(productBulkDecreaseRequest);
+		return ApiResult.success(null);
+	}
+
 }
