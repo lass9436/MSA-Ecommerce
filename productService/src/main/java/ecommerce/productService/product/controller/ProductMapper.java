@@ -1,5 +1,7 @@
 package ecommerce.productService.product.controller;
 
+import java.util.List;
+
 import ecommerce.productService.product.domain.Product;
 
 public class ProductMapper {
@@ -25,5 +27,11 @@ public class ProductMapper {
 			product.getProductPrice(),
 			product.getStore().getStoreId()
 		);
+	}
+
+	public static List<ProductResponse> toProductResponses(List<Product> products) {
+		return products.stream()
+			.map(ProductMapper::toProductResponse)
+			.toList();
 	}
 }

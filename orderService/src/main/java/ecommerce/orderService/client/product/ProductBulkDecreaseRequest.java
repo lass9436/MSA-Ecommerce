@@ -1,0 +1,15 @@
+package ecommerce.orderService.client.product;
+
+import java.util.List;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class ProductBulkDecreaseRequest {
+
+	private List<ProductBulkDecreaseRequestDetail> details;
+}

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ecommerce.productService.exception.EntityNotFoundException;
 import ecommerce.productService.product.controller.ProductBulkDecreaseRequest;
 import ecommerce.productService.product.controller.ProductBulkDecreaseRequestDetail;
+import ecommerce.productService.product.controller.ProductBulkRequest;
 import ecommerce.productService.product.domain.Product;
 import ecommerce.productService.product.domain.Store;
 import ecommerce.productService.product.repository.ProductRepository;
@@ -73,5 +74,9 @@ public class ProductService {
 
 			product.decreaseStock(detail.getDecreaseQuantity());
 		}
+	}
+
+	public List<Product> findAllById(ProductBulkRequest productBulkRequest) {
+		return productRepository.findAllById(productBulkRequest.getProductIds());
 	}
 }

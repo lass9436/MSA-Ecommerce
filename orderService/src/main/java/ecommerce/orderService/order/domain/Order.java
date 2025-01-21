@@ -1,11 +1,15 @@
 package ecommerce.orderService.order.domain;
 
+import ecommerce.orderService.client.product.Product;
+import ecommerce.orderService.client.product.ProductBulkDecreaseRequest;
+import ecommerce.orderService.client.product.ProductBulkDecreaseRequestDetail;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,13 +29,74 @@ public class Order {
 	@Column(name = "order_amount", nullable = false)
 	private Long orderAmount;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "order_status", nullable = false, length = 50)
-	private String orderStatus;
+	private OrderStatus orderStatus;
 
 	@Column(name = "order_at", nullable = false)
 	private LocalDateTime orderAt;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<OrderProduct> orderProducts;
+	private final List<OrderProduct> orderProducts = new ArrayList<>();
 
+	public Order(Long userSeq, Long orderAmount, OrderStatus orderStatus, LocalDateTime orderAt) {
+		this.userSeq = userSeq;
+		this.orderAmount = orderAmount;
+		this.orderStatus = orderStatus;
+		this.orderAt = orderAt;
+	}
+
+	public void addOrderProduct(OrderProduct orderProduct) {
+		this.orderProducts.add(orderProduct);
+	}
+
+	public void calculateTotalAmount(List<Product> products) {
+		long totalAmount = 0L;
+
+		for (OrderProduct orderProduct : orderProducts) {
+			Product product = findProductById(products, orderProduct.getProductId());
+
+			if (product.getProductQuantity() < orderProduct.getOrderQuantity()) {
+				throw new IllegalStateException("Insufficient stock for product ID: " + product.getProductId());
+			}
+
+			if (!product.getProductPrice().equals(orderProduct.getProductPrice())) {
+				throw new IllegalArgumentException("Product price mismatch for product ID: " + product.getProductId());
+			}
+
+			if (!product.getStoreId().equals(orderProduct.getStoreId())) {
+				throw new IllegalArgumentException("Store ID mismatch for product ID: " + product.getProductId());
+			}
+
+			totalAmount += product.getProductPrice() * orderProduct.getOrderQuantity();
+		}
+
+		if (!this.orderAmount.equals(totalAmount)) {
+			throw new IllegalArgumentException("Order amount mismatch. Expected: " + totalAmount + ", Provided: " + orderAmount);
+		}
+
+		this.orderAmount = totalAmount;
+	}
+
+	public ProductBulkDecreaseRequest toBulkDecreaseRequest() {
+		List<ProductBulkDecreaseRequestDetail> details = this.getOrderProducts().stream()
+			.map(orderProduct -> {
+				ProductBulkDecreaseRequestDetail detail = new ProductBulkDecreaseRequestDetail();
+				detail.setProductId(orderProduct.getProductId());
+				detail.setDecreaseQuantity(orderProduct.getOrderQuantity());
+				return detail;
+			})
+			.toList();
+
+		ProductBulkDecreaseRequest request = new ProductBulkDecreaseRequest();
+		request.setDetails(details);
+		return request;
+	}
+
+	private Product findProductById(List<Product> products, Long productId) {
+		return products.stream()
+			.filter(product -> product.getProductId().equals(productId))
+			.findFirst()
+			.orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+	}
 }

@@ -27,9 +27,18 @@ public class OrderProduct {
 	private Long productId; // 외래키 저장
 
 	@Column(name = "order_quantity", nullable = false)
-	private Integer orderQuantity;
+	private Long orderQuantity;
 
 	@Column(name = "product_price", nullable = false)
 	private Long productPrice;
+
+	public OrderProduct(Order order, Long storeId, Long productId, Long orderQuantity, Long productPrice) {
+		this.order = order;
+		this.storeId = storeId;
+		this.productId = productId;
+		this.orderQuantity = orderQuantity;
+		this.productPrice = productPrice;
+		order.addOrderProduct(this);
+	}
 
 }
