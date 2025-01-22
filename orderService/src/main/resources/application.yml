@@ -23,7 +23,7 @@ spring:
 
 seller:
   service:
-    url: http://localhost:9020
+    url: https://localhost:9020
 
 product:
   service:
@@ -31,11 +31,4 @@ product:
 
 user:
   service:
-    url: http://localhost:9030
-
-logging:
-  level:
-    com.example.client.ProductClient: DEBUG
-    feign.Logger: DEBUG
-    feign.Request: DEBUG
-    feign.Response: DEBUG
+    url: https://localhost:9030

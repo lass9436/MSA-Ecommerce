@@ -14,7 +14,17 @@ spring:
     name: productService
   jpa:
     open-in-view: false
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
+      http2client:
+        enabled: true
 
 seller:
   service:
-    url: http://localhost:9020
+    url: https://localhost:9020
+
+user:
+  service:
+    url: https://localhost:9030
