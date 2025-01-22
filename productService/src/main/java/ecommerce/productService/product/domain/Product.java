@@ -57,5 +57,9 @@ public class Product {
 		}
 		this.productQuantity -= quantity.intValue();
 	}
+
+	public void increaseStock(Long quantity) {
+		this.productQuantity += quantity.intValue();
+	}
 }
 

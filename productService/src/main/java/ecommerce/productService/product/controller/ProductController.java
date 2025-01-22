@@ -65,8 +65,16 @@ public class ProductController {
 		return ApiResult.success(null);
 	}
 
+	@PatchMapping("/bulk-increase")
+	public ApiResult<Void> bulkIncreaseProduct(
+		@Valid @RequestBody ProductBulkIncreaseRequest productBulkIncreaseRequest) {
+		productService.bulkIncreaseProduct(productBulkIncreaseRequest);
+		return ApiResult.success(null);
+	}
+
 	@PostMapping("/bulk")
-	public ApiResult<List<ProductResponse>> findAllProductById(@Valid @RequestBody ProductBulkRequest productBulkRequest) {
+	public ApiResult<List<ProductResponse>> findAllProductById(
+		@Valid @RequestBody ProductBulkRequest productBulkRequest) {
 		return ApiResult.success(toProductResponses(productService.findAllById(productBulkRequest)));
 	}
 

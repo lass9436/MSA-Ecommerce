@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ecommerce.productService.exception.EntityNotFoundException;
 import ecommerce.productService.product.controller.ProductBulkDecreaseRequest;
 import ecommerce.productService.product.controller.ProductBulkDecreaseRequestDetail;
+import ecommerce.productService.product.controller.ProductBulkIncreaseRequest;
+import ecommerce.productService.product.controller.ProductBulkIncreaseRequestDetail;
 import ecommerce.productService.product.controller.ProductBulkRequest;
 import ecommerce.productService.product.domain.Product;
 import ecommerce.productService.product.domain.Store;
@@ -78,5 +80,19 @@ public class ProductService {
 
 	public List<Product> findAllById(ProductBulkRequest productBulkRequest) {
 		return productRepository.findAllById(productBulkRequest.getProductIds());
+	}
+
+	public void bulkIncreaseProduct(@Valid ProductBulkIncreaseRequest productBulkIncreaseRequest) {
+		List<Long> productIds = productBulkIncreaseRequest.getDetails().stream()
+			.map(ProductBulkIncreaseRequestDetail::getProductId)
+			.toList();
+
+		List<Product> products = productRepository.findByProductIdsWithLock(productIds);
+
+		products.forEach(product -> productBulkIncreaseRequest.getDetails().stream()
+			.filter(detail -> detail.getProductId().equals(product.getProductId()))
+			.findFirst()
+			.ifPresent(detail -> product.increaseStock(detail.getIncreaseQuantity()))
+		);
 	}
 }
