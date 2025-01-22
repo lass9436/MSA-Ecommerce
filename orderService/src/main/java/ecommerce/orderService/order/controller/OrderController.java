@@ -5,6 +5,7 @@ import static ecommerce.orderService.order.controller.OrderMapper.*;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,4 +42,10 @@ public class OrderController {
 	public ApiResult<OrderResponse> findOrderById(@PathVariable Long id) {
 		return ApiResult.success(toOrderResponse(orderService.findById(id)));
 	}
+
+	@PatchMapping("/{id}/cancel")
+	public ApiResult<OrderResponse> cancelOrder(@PathVariable Long id) {
+		return ApiResult.success(toOrderResponse(orderService.cancelOrder(id)));
+	}
+
 }

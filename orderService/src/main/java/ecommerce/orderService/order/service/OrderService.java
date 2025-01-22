@@ -48,4 +48,11 @@ public class OrderService {
 		return orderRepository.findByIdWithProducts(id)
 			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found."));
 	}
+
+	public Order cancelOrder(Long id) {
+		Order order = orderRepository.findByIdWithProducts(id)
+			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found."));
+		productClient.bulkIncreaseProduct(order.toProductBulkIncreaseRequest());
+		return order.cancel();
+	}
 }

@@ -3,6 +3,8 @@ package ecommerce.orderService.order.domain;
 import ecommerce.orderService.client.product.Product;
 import ecommerce.orderService.client.product.ProductBulkDecreaseRequest;
 import ecommerce.orderService.client.product.ProductBulkDecreaseRequestDetail;
+import ecommerce.orderService.client.product.ProductBulkIncreaseRequest;
+import ecommerce.orderService.client.product.ProductBulkIncreaseRequestDetail;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -72,7 +74,8 @@ public class Order {
 		}
 
 		if (!this.orderAmount.equals(totalAmount)) {
-			throw new IllegalArgumentException("Order amount mismatch. Expected: " + totalAmount + ", Provided: " + orderAmount);
+			throw new IllegalArgumentException(
+				"Order amount mismatch. Expected: " + totalAmount + ", Provided: " + orderAmount);
 		}
 
 		this.orderAmount = totalAmount;
@@ -98,5 +101,21 @@ public class Order {
 			.filter(product -> product.getProductId().equals(productId))
 			.findFirst()
 			.orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+	}
+
+	public Order cancel() {
+		if (!orderStatus.equals(OrderStatus.ORDER_CREATED)) {
+			throw new IllegalStateException(
+				"Order status mismatch. Expected: " + orderStatus + ", Provided: " + orderStatus);
+		}
+		orderStatus = OrderStatus.ORDER_CANCELLED;
+		return this;
+	}
+
+	public ProductBulkIncreaseRequest toProductBulkIncreaseRequest() {
+		List<ProductBulkIncreaseRequestDetail> details = this.getOrderProducts().stream()
+			.map(p -> new ProductBulkIncreaseRequestDetail(p.getProductId(), p.getOrderQuantity()))
+			.toList();
+		return new ProductBulkIncreaseRequest(details);
 	}
 }

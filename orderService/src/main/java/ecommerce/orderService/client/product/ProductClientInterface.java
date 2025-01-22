@@ -22,4 +22,7 @@ public interface ProductClientInterface {
 
 	@PatchMapping("/api/products/bulk-decrease")
 	ApiResult<Void> bulkDecreaseProduct(@RequestBody ProductBulkDecreaseRequest request);
+
+	@PatchMapping("/api/products/bulk-increase")
+	ApiResult<Void> bulkIncreaseProduct(@RequestBody ProductBulkIncreaseRequest request);
 }

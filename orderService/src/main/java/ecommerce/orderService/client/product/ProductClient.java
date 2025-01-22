@@ -42,4 +42,14 @@ public class ProductClient {
 					+ result.getErrorMessage());
 		}
 	}
+
+	public void bulkIncreaseProduct(ProductBulkIncreaseRequest request) {
+		ApiResult<Void> result = productClientInterface.bulkIncreaseProduct(request);
+		if (!result.isSuccess()) {
+			throw new IllegalStateException(
+				"Failed to increase product quantities. ErrorCode: " + result.getErrorCode()
+				+ ", ErrorMessage: " + result.getErrorMessage()
+			);
+		}
+	}
 }
