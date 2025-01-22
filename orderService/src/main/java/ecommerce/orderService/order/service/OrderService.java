@@ -11,9 +11,11 @@ import ecommerce.orderService.client.product.ProductBulkRequest;
 import ecommerce.orderService.client.product.ProductClient;
 import ecommerce.orderService.client.user.User;
 import ecommerce.orderService.client.user.UserClient;
+import ecommerce.orderService.exception.EntityNotFoundException;
 import ecommerce.orderService.order.domain.Order;
 import ecommerce.orderService.order.domain.OrderProduct;
 import ecommerce.orderService.order.repository.OrderRepository;
+import io.micrometer.common.KeyValues;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -36,5 +38,14 @@ public class OrderService {
 		ProductBulkDecreaseRequest productBulkDecreaseRequest = order.toBulkDecreaseRequest();
 		productClient.bulkDecreaseProduct(productBulkDecreaseRequest);
 		return orderRepository.save(order);
+	}
+
+	public List<Order> findAllOrders() {
+		return orderRepository.findAllWithProducts();
+	}
+
+	public Order findById(Long id) {
+		return orderRepository.findByIdWithProducts(id)
+			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found."));
 	}
 }

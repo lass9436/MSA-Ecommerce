@@ -2,6 +2,10 @@ package ecommerce.orderService.order.controller;
 
 import static ecommerce.orderService.order.controller.OrderMapper.*;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +26,19 @@ public class OrderController {
 	@PostMapping
 	public ApiResult<OrderResponse> registerOrder(@Valid @RequestBody OrderRequest orderRequest) {
 		return ApiResult.success(toOrderResponse(orderService.registerOrder(toOrder(orderRequest))));
+	}
+
+	@GetMapping
+	public ApiResult<List<OrderResponse>> findAllOrders() {
+		List<OrderResponse> orders = orderService.findAllOrders()
+			.stream()
+			.map(OrderMapper::toOrderResponse)
+			.toList();
+		return ApiResult.success(orders);
+	}
+
+	@GetMapping("/{id}")
+	public ApiResult<OrderResponse> findOrderById(@PathVariable Long id) {
+		return ApiResult.success(toOrderResponse(orderService.findById(id)));
 	}
 }
