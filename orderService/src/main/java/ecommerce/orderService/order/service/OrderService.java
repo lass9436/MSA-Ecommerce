@@ -12,10 +12,14 @@ import ecommerce.orderService.client.product.ProductClient;
 import ecommerce.orderService.client.user.User;
 import ecommerce.orderService.client.user.UserClient;
 import ecommerce.orderService.exception.EntityNotFoundException;
+import ecommerce.orderService.messaging.event.OrderPendingEvent;
+import ecommerce.orderService.messaging.event.OrderReserveProductEvent;
+import ecommerce.orderService.messaging.event.ProductReservedForOrderEvent;
+import ecommerce.orderService.messaging.event.UserApprovedForOrderEvent;
+import ecommerce.orderService.messaging.producer.OrderEventProducer;
 import ecommerce.orderService.order.domain.Order;
 import ecommerce.orderService.order.domain.OrderProduct;
 import ecommerce.orderService.order.repository.OrderRepository;
-import io.micrometer.common.KeyValues;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,6 +30,7 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final ProductClient productClient;
 	private final UserClient userClient;
+	private final OrderEventProducer orderEventProducer;
 
 	public Order registerOrder(Order order) {
 		User user = userClient.getUserById(order.getUserSeq());
@@ -37,7 +42,19 @@ public class OrderService {
 		order.calculateTotalAmount(products);
 		ProductBulkDecreaseRequest productBulkDecreaseRequest = order.toBulkDecreaseRequest();
 		productClient.bulkDecreaseProduct(productBulkDecreaseRequest);
+		order.complete();
 		return orderRepository.save(order);
+	}
+
+	public void asyncRegisterOrder(Order order) {
+		orderRepository.save(order.pending());
+		orderEventProducer.sendOrderPendingEvent(OrderPendingEvent.from(order));
+	}
+
+	public void reserveProduct(UserApprovedForOrderEvent event) {
+		Order order = orderRepository.findByIdWithProducts(event.getOrderId())
+			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
+		orderEventProducer.sendOrderReserveProductEvent(OrderReserveProductEvent.from(order));
 	}
 
 	public List<Order> findAllOrders() {
@@ -47,6 +64,12 @@ public class OrderService {
 	public Order findById(Long id) {
 		return orderRepository.findByIdWithProducts(id)
 			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found."));
+	}
+
+	public void complete(ProductReservedForOrderEvent event) {
+		Order order = orderRepository.findByIdWithProducts(event.getOrderId())
+			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + event.getOrderId() + " not found."));
+		order.complete();
 	}
 
 	public Order cancelOrder(Long id) {

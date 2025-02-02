@@ -29,6 +29,12 @@ public class OrderController {
 		return ApiResult.success(toOrderResponse(orderService.registerOrder(toOrder(orderRequest))));
 	}
 
+	@PostMapping("/async")
+	public ApiResult<Void> asyncRegisterOrder(@Valid @RequestBody OrderRequest orderRequest) {
+		orderService.asyncRegisterOrder(toOrder(orderRequest));
+		return ApiResult.success(null);
+	}
+
 	@GetMapping
 	public ApiResult<List<OrderResponse>> findAllOrders() {
 		List<OrderResponse> orders = orderService.findAllOrders()

@@ -61,5 +61,17 @@ public class Product {
 	public void increaseStock(Long quantity) {
 		this.productQuantity += quantity.intValue();
 	}
+
+	public void validatePrice(Long requestedPrice) {
+		if (!this.productPrice.equals(requestedPrice)) {
+			throw new IllegalArgumentException("Product price mismatch for product ID: " + this.productId);
+		}
+	}
+
+	public void validateStore(Store store) {
+		if (!this.store.equals(store)) {
+			throw new IllegalArgumentException("Product does not belong to the given store: " + this.productId);
+		}
+	}
 }
 

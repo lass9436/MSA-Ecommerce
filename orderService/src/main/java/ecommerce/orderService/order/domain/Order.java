@@ -91,9 +91,7 @@ public class Order {
 			})
 			.toList();
 
-		ProductBulkDecreaseRequest request = new ProductBulkDecreaseRequest();
-		request.setDetails(details);
-		return request;
+		return new ProductBulkDecreaseRequest(details);
 	}
 
 	private Product findProductById(List<Product> products, Long productId) {
@@ -103,11 +101,12 @@ public class Order {
 			.orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
 	}
 
+	public Order pending() {
+		orderStatus = OrderStatus.ORDER_PENDING;
+		return this;
+	}
+
 	public Order cancel() {
-		if (!orderStatus.equals(OrderStatus.ORDER_CREATED)) {
-			throw new IllegalStateException(
-				"Order status mismatch. Expected: " + orderStatus + ", Provided: " + orderStatus);
-		}
 		orderStatus = OrderStatus.ORDER_CANCELLED;
 		return this;
 	}
@@ -117,5 +116,10 @@ public class Order {
 			.map(p -> new ProductBulkIncreaseRequestDetail(p.getProductId(), p.getOrderQuantity()))
 			.toList();
 		return new ProductBulkIncreaseRequest(details);
+	}
+
+	public Order complete() {
+		orderStatus = OrderStatus.ORDER_COMPLETED;
+		return this;
 	}
 }

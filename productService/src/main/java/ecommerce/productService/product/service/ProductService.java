@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ecommerce.productService.exception.EntityNotFoundException;
+import ecommerce.productService.messaging.event.OrderReserveProductEvent;
+import ecommerce.productService.messaging.event.ProductReservedForOrderEvent;
+import ecommerce.productService.messaging.event.ReservedProductItemEvent;
+import ecommerce.productService.messaging.producer.ProductEventProducer;
 import ecommerce.productService.product.controller.ProductBulkDecreaseRequest;
 import ecommerce.productService.product.controller.ProductBulkDecreaseRequestDetail;
 import ecommerce.productService.product.controller.ProductBulkIncreaseRequest;
@@ -25,6 +29,7 @@ public class ProductService {
 
 	private final ProductRepository productRepository;
 	private final StoreRepository storeRepository;
+	private final ProductEventProducer productEventProducer;
 
 	public Product registerProduct(Long storeId, Product product) {
 		Store store = storeRepository.findById(storeId)
@@ -94,5 +99,29 @@ public class ProductService {
 			.findFirst()
 			.ifPresent(detail -> product.increaseStock(detail.getIncreaseQuantity()))
 		);
+	}
+
+	public void reserveProduct(OrderReserveProductEvent event) {
+		long totalReservedAmount = 0L;
+
+		for (ReservedProductItemEvent productEvent : event.getProducts()) {
+			Store store = storeRepository.findById(productEvent.getStoreId())
+				.orElseThrow(() -> new IllegalArgumentException("Store not found: " + productEvent.getStoreId()));
+
+			Product product = productRepository.findById(productEvent.getProductId())
+				.orElseThrow(() -> new IllegalArgumentException("Product not found: " + productEvent.getProductId()));
+
+			product.validateStore(store);
+			product.validatePrice(productEvent.getProductPrice());
+			product.decreaseStock(productEvent.getOrderQuantity());
+
+			totalReservedAmount += productEvent.getProductPrice() * productEvent.getOrderQuantity();
+		}
+
+		if (!event.getOrderAmount().equals(totalReservedAmount)) {
+			throw new IllegalStateException("총 주문 금액과 상품 총액 불일치: " + totalReservedAmount + " vs " + event.getOrderAmount());
+		}
+
+		productEventProducer.sendProductReservedForOrderEvent(ProductReservedForOrderEvent.from(event.getOrderId()));
 	}
 }
