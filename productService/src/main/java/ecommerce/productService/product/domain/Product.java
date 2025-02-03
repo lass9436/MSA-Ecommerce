@@ -1,5 +1,6 @@
 package ecommerce.productService.product.domain;
 
+import ecommerce.productService.store.domain.Store;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,11 +40,11 @@ public class Product {
 		this.productPrice = productPrice;
 	}
 
-	public void update(Product updateProduct) {
-		this.productName = updateProduct.getProductName();
-		this.productCategory = updateProduct.getProductCategory();
-		this.productQuantity = updateProduct.getProductQuantity();
-		this.productPrice = updateProduct.getProductPrice();
+	public void update(String productName, String productCategory, Integer productQuantity, Long productPrice) {
+		this.productName = productName;
+		this.productCategory = productCategory;
+		this.productQuantity = productQuantity;
+		this.productPrice = productPrice;
 	}
 
 	public void assignStore(Store store) {

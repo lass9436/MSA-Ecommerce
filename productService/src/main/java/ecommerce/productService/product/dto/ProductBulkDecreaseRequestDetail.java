@@ -1,4 +1,4 @@
-package ecommerce.productService.product.controller;
+package ecommerce.productService.product.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

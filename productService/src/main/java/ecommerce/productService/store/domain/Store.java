@@ -1,5 +1,6 @@
-package ecommerce.productService.product.domain;
+package ecommerce.productService.store.domain;
 
+import ecommerce.productService.product.domain.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,10 +41,10 @@ public class Store {
 		this.sellerSeq = sellerSeq;
 	}
 
-	public void update(Store updateStore) {
-		this.storeName = updateStore.getStoreName();
-		this.storeAccountNumber = updateStore.getStoreAccountNumber();
-		this.storeLicense = updateStore.getStoreLicense();
-		this.sellerSeq = updateStore.getSellerSeq();
+	public void update(String storeName, String storeAccountNumber, String storeLicense, Long sellerSeq) {
+		this.storeName = storeName;
+		this.storeAccountNumber = storeAccountNumber;
+		this.storeLicense = storeLicense;
+		this.sellerSeq = sellerSeq;
 	}
 }

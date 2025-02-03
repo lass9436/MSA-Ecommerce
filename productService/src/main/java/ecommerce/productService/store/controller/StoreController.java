@@ -1,6 +1,4 @@
-package ecommerce.productService.product.controller;
-
-import static ecommerce.productService.product.controller.StoreMapper.*;
+package ecommerce.productService.store.controller;
 
 import java.util.List;
 
@@ -14,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ecommerce.productService.global.ApiResult;
-import ecommerce.productService.product.service.StoreService;
+import ecommerce.productService.store.dto.StoreRequest;
+import ecommerce.productService.store.dto.StoreResponse;
+import ecommerce.productService.store.service.StoreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -27,26 +27,22 @@ public class StoreController {
 
 	@PostMapping
 	public ApiResult<StoreResponse> registerStore(@Valid @RequestBody StoreRequest storeRequest) {
-		return ApiResult.success(toStoreResponse(storeService.registerStore(toStore(storeRequest))));
+		return ApiResult.success(storeService.registerStore(storeRequest));
 	}
 
 	@GetMapping
 	public ApiResult<List<StoreResponse>> findAllStores() {
-		List<StoreResponse> stores = storeService.findAllStores()
-			.stream()
-			.map(StoreMapper::toStoreResponse)
-			.toList();
-		return ApiResult.success(stores);
+		return ApiResult.success(storeService.findAllStores());
 	}
 
 	@GetMapping("/{id}")
 	public ApiResult<StoreResponse> findStoreById(@PathVariable Long id) {
-		return ApiResult.success(toStoreResponse(storeService.findById(id)));
+		return ApiResult.success(storeService.findById(id));
 	}
 
 	@PutMapping("/{id}")
 	public ApiResult<StoreResponse> updateStore(@PathVariable Long id, @Valid @RequestBody StoreRequest storeRequest) {
-		return ApiResult.success(toStoreResponse(storeService.updateStore(id, toStore(storeRequest))));
+		return ApiResult.success(storeService.updateStore(id, storeRequest));
 	}
 
 	@DeleteMapping("/{id}")
