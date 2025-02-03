@@ -1,6 +1,4 @@
-package ecommerce.userService.user.controller;
-
-import static ecommerce.userService.user.controller.PaymentMapper.*;
+package ecommerce.userService.payment.controller;
 
 import java.util.List;
 
@@ -14,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ecommerce.userService.global.ApiResult;
-import ecommerce.userService.user.service.PaymentService;
+import ecommerce.userService.payment.dto.PaymentRequest;
+import ecommerce.userService.payment.dto.PaymentResponse;
+import ecommerce.userService.payment.service.PaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -27,26 +27,22 @@ public class PaymentController {
 
 	@PostMapping
 	public ApiResult<PaymentResponse> registerPayment(@Valid @RequestBody PaymentRequest paymentRequest) {
-		return ApiResult.success(toPaymentResponse(paymentService.registerPayment(paymentRequest.getUserSeq(), toPayment(paymentRequest))));
+		return ApiResult.success(paymentService.registerPayment(paymentRequest));
 	}
 
 	@GetMapping
 	public ApiResult<List<PaymentResponse>> findAllPayments() {
-		List<PaymentResponse> payments = paymentService.findAllPayments()
-			.stream()
-			.map(PaymentMapper::toPaymentResponse)
-			.toList();
-		return ApiResult.success(payments);
+		return ApiResult.success(paymentService.findAllPayments());
 	}
 
 	@GetMapping("/{id}")
 	public ApiResult<PaymentResponse> findPaymentById(@PathVariable Long id) {
-		return ApiResult.success(toPaymentResponse(paymentService.findById(id)));
+		return ApiResult.success(paymentService.findById(id));
 	}
 
 	@PutMapping("/{id}")
 	public ApiResult<PaymentResponse> updatePayment(@PathVariable Long id, @Valid @RequestBody PaymentRequest paymentRequest) {
-		return ApiResult.success(toPaymentResponse(paymentService.updatePayment(id, toPayment(paymentRequest))));
+		return ApiResult.success(paymentService.updatePayment(id, paymentRequest));
 	}
 
 	@DeleteMapping("/{id}")

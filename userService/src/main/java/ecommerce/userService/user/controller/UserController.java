@@ -1,14 +1,15 @@
 package ecommerce.userService.user.controller;
 
+import ecommerce.userService.user.dto.UserRequest;
+import ecommerce.userService.user.dto.UserResponse;
 import ecommerce.userService.user.service.UserService;
 import ecommerce.userService.global.ApiResult;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static ecommerce.userService.user.controller.UserMapper.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,27 +20,23 @@ public class UserController {
 
 	@PostMapping
 	public ApiResult<UserResponse> registerUser(@Valid @RequestBody UserRequest userRequest) {
-		return ApiResult.success(toUserResponse(userService.registerUser(toUser(userRequest))));
+		return ApiResult.success(userService.registerUser(userRequest));
 	}
 
 	@GetMapping
 	public ApiResult<List<UserResponse>> findAllUsers() {
-		List<UserResponse> users = userService.findAllUsers()
-			.stream()
-			.map(UserMapper::toUserResponse)
-			.toList();
-		return ApiResult.success(users);
+		return ApiResult.success(userService.findAllUsers());
 	}
 
 	@GetMapping("/{id}")
 	public ApiResult<UserResponse> findUserById(@PathVariable Long id) {
-		return ApiResult.success(toUserResponse(userService.findById(id)));
+		return ApiResult.success(userService.findById(id));
 	}
 
 	@PutMapping("/{id}")
 	public ApiResult<UserResponse> updateUser(@PathVariable Long id,
 		@Valid @RequestBody UserRequest userRequest) {
-		return ApiResult.success(toUserResponse(userService.updateUser(id, toUser(userRequest))));
+		return ApiResult.success(userService.updateUser(id, userRequest));
 	}
 
 	@DeleteMapping("/{id}")

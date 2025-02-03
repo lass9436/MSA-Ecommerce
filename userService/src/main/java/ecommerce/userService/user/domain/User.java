@@ -31,9 +31,9 @@ public class User {
 		this.userName = userName;
 	}
 
-	public void update(User updatedUser) {
-		this.userId = updatedUser.getUserId();
-		this.userPassword = updatedUser.getUserPassword();
-		this.userName = updatedUser.getUserName();
+	public void update(String userId, String userPassword, String userName) {
+		this.userId = userId;
+		this.userPassword = userPassword;
+		this.userName = userName;
 	}
 }

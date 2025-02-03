@@ -1,8 +1,8 @@
-package ecommerce.userService.user.repository;
+package ecommerce.userService.payment.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ecommerce.userService.user.domain.Payment;
+import ecommerce.userService.payment.domain.Payment;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 }

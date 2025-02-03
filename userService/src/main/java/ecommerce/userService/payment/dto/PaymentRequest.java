@@ -1,4 +1,4 @@
-package ecommerce.userService.user.controller;
+package ecommerce.userService.payment.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

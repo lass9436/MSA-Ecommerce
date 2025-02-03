@@ -1,10 +1,10 @@
-package ecommerce.userService.user.domain;
+package ecommerce.userService.payment.domain;
 
+import ecommerce.userService.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,11 +39,11 @@ public class Payment {
 		this.cardNumber = cardNumber;
 	}
 
-	public void update(Payment updatePayment) {
-		this.paymentType = updatePayment.getPaymentType();
-		this.paymentName = updatePayment.getPaymentName();
-		this.accountNumber = updatePayment.getAccountNumber();
-		this.cardNumber = updatePayment.getCardNumber();
+	public void update(String paymentType, String paymentName, String accountNumber, String cardNumber) {
+		this.paymentType = paymentType;
+		this.paymentName = paymentName;
+		this.accountNumber = accountNumber;
+		this.cardNumber = cardNumber;
 	}
 
 	public void assignUser(User user) {
