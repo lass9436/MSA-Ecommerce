@@ -1,10 +1,9 @@
-package ecommerce.productService.seller.client;
+package ecommerce.productService.client.seller;
 
 import org.springframework.stereotype.Component;
 
 import ecommerce.productService.exception.EntityNotFoundException;
 import ecommerce.productService.global.ApiResult;
-import ecommerce.productService.seller.domain.Seller;
 import lombok.RequiredArgsConstructor;
 
 @Component

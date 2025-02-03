@@ -1,4 +1,4 @@
-package ecommerce.productService.seller.domain;
+package ecommerce.productService.client.seller;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

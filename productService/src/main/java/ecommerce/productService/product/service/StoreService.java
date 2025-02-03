@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ecommerce.productService.product.domain.Store;
 import ecommerce.productService.exception.EntityNotFoundException;
 import ecommerce.productService.product.repository.StoreRepository;
-import ecommerce.productService.seller.client.SellerClient;
-import ecommerce.productService.seller.domain.Seller;
+import ecommerce.productService.client.seller.SellerClient;
+import ecommerce.productService.client.seller.Seller;
 import lombok.RequiredArgsConstructor;
 
 @Service
