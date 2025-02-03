@@ -36,9 +36,9 @@ public class Seller {
 		this.sellerName = sellerName;
 	}
 
-	public void update(Seller updateSeller) {
-		this.sellerId = updateSeller.getSellerId();
-		this.sellerPassword = updateSeller.getSellerPassword();
-		this.sellerName = updateSeller.getSellerName();
+	public void update(String sellerId, String sellerPassword, String sellerName) {
+		this.sellerId = sellerId;
+		this.sellerPassword = sellerPassword;
+		this.sellerName = sellerName;
 	}
 }

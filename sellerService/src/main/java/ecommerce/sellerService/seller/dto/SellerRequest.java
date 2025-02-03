@@ -1,4 +1,4 @@
-package ecommerce.sellerService.seller.controller;
+package ecommerce.sellerService.seller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

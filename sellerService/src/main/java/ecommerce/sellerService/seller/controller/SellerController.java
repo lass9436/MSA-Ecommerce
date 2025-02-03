@@ -1,7 +1,5 @@
 package ecommerce.sellerService.seller.controller;
 
-import static ecommerce.sellerService.seller.controller.SellerMapper.*;
-
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ecommerce.sellerService.global.ApiResult;
+import ecommerce.sellerService.seller.dto.SellerRequest;
+import ecommerce.sellerService.seller.dto.SellerResponse;
 import ecommerce.sellerService.seller.service.SellerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,27 +27,23 @@ public class SellerController {
 
 	@PostMapping
 	public ApiResult<SellerResponse> registerSeller(@Valid @RequestBody SellerRequest sellerRequest) {
-		return ApiResult.success(toSellerResponse(sellerService.registerSeller(toSeller(sellerRequest))));
+		return ApiResult.success(sellerService.registerSeller(sellerRequest));
 	}
 
 	@GetMapping
 	public ApiResult<List<SellerResponse>> findAllSellers() {
-		List<SellerResponse> sellers = sellerService.findAllSellers()
-			.stream()
-			.map(SellerMapper::toSellerResponse)
-			.toList();
-		return ApiResult.success(sellers);
+		return ApiResult.success(sellerService.findAllSellers());
 	}
 
 	@GetMapping("/{id}")
 	public ApiResult<SellerResponse> findSellerById(@PathVariable Long id) {
-		return ApiResult.success(toSellerResponse(sellerService.findById(id)));
+		return ApiResult.success(sellerService.findById(id));
 	}
 
 	@PutMapping("/{id}")
 	public ApiResult<SellerResponse> updateSeller(@PathVariable Long id,
 		@Valid @RequestBody SellerRequest sellerRequest) {
-		return ApiResult.success(toSellerResponse(sellerService.updateSeller(id, toSeller(sellerRequest))));
+		return ApiResult.success(sellerService.updateSeller(id, sellerRequest));
 	}
 
 	@DeleteMapping("/{id}")
