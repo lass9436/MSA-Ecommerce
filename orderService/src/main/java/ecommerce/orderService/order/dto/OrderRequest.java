@@ -1,4 +1,4 @@
-package ecommerce.orderService.order.controller;
+package ecommerce.orderService.order.dto;
 
 import java.util.List;
 

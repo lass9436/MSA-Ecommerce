@@ -1,7 +1,5 @@
 package ecommerce.orderService.order.controller;
 
-import static ecommerce.orderService.order.controller.OrderMapper.*;
-
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ecommerce.orderService.global.ApiResult;
+import ecommerce.orderService.order.dto.OrderRequest;
+import ecommerce.orderService.order.dto.OrderResponse;
 import ecommerce.orderService.order.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,32 +26,28 @@ public class OrderController {
 
 	@PostMapping
 	public ApiResult<OrderResponse> registerOrder(@Valid @RequestBody OrderRequest orderRequest) {
-		return ApiResult.success(toOrderResponse(orderService.registerOrder(toOrder(orderRequest))));
+		return ApiResult.success(orderService.registerOrder(orderRequest));
 	}
 
 	@PostMapping("/async")
 	public ApiResult<Void> asyncRegisterOrder(@Valid @RequestBody OrderRequest orderRequest) {
-		orderService.asyncRegisterOrder(toOrder(orderRequest));
+		orderService.asyncRegisterOrder(orderRequest);
 		return ApiResult.success(null);
 	}
 
 	@GetMapping
 	public ApiResult<List<OrderResponse>> findAllOrders() {
-		List<OrderResponse> orders = orderService.findAllOrders()
-			.stream()
-			.map(OrderMapper::toOrderResponse)
-			.toList();
-		return ApiResult.success(orders);
+		return ApiResult.success(orderService.findAllOrders());
 	}
 
 	@GetMapping("/{id}")
 	public ApiResult<OrderResponse> findOrderById(@PathVariable Long id) {
-		return ApiResult.success(toOrderResponse(orderService.findById(id)));
+		return ApiResult.success(orderService.findById(id));
 	}
 
 	@PatchMapping("/{id}/cancel")
 	public ApiResult<OrderResponse> cancelOrder(@PathVariable Long id) {
-		return ApiResult.success(toOrderResponse(orderService.cancelOrder(id)));
+		return ApiResult.success(orderService.cancelOrder(id));
 	}
 
 }

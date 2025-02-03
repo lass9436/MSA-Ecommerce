@@ -106,9 +106,8 @@ public class Order {
 		return this;
 	}
 
-	public Order cancel() {
+	public void cancel() {
 		orderStatus = OrderStatus.ORDER_CANCELLED;
-		return this;
 	}
 
 	public ProductBulkIncreaseRequest toProductBulkIncreaseRequest() {
@@ -118,8 +117,7 @@ public class Order {
 		return new ProductBulkIncreaseRequest(details);
 	}
 
-	public Order complete() {
+	public void complete() {
 		orderStatus = OrderStatus.ORDER_COMPLETED;
-		return this;
 	}
 }
