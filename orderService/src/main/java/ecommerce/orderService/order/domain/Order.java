@@ -120,4 +120,12 @@ public class Order {
 	public void complete() {
 		orderStatus = OrderStatus.ORDER_COMPLETED;
 	}
+
+	public void userFailed() {
+		orderStatus = OrderStatus.USER_FAILED;
+	}
+
+	public void productFailed() {
+		orderStatus = OrderStatus.PRODUCT_FAILED;
+	}
 }

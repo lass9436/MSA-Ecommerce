@@ -127,7 +127,7 @@ public class ProductService {
 	 * @param productBulkIncreaseRequest 재고 증가 요청 객체
 	 * @throws EntityNotFoundException 상품 ID가 없을 경우 예외 발생
 	 */
-	public void bulkIncreaseProduct(@Valid ProductBulkIncreaseRequest productBulkIncreaseRequest) {
+	public void bulkIncreaseProduct(ProductBulkIncreaseRequest productBulkIncreaseRequest) {
 		// 요청된 상품 ID 리스트 추출
 		List<Long> productIds = productBulkIncreaseRequest.getDetails().stream()
 			.map(ProductBulkIncreaseRequestDetail::getProductId)
@@ -160,7 +160,7 @@ public class ProductService {
 	 * @return 조회된 상품 정보를 담은 ProductResponse 객체 리스트
 	 * @throws EntityNotFoundException 상품 ID가 없을 경우 예외 발생
 	 */
-	public List<ProductResponse> findAllById(@Valid ProductBulkRequest productBulkRequest) {
+	public List<ProductResponse> findAllById(ProductBulkRequest productBulkRequest) {
 		// 요청에서 받은 상품 ID 리스트를 가져옴
 		List<Product> products = productRepository.findAllById(productBulkRequest.getProductIds());
 

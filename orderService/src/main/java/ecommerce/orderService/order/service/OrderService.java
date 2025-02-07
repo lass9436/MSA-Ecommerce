@@ -14,7 +14,9 @@ import ecommerce.orderService.client.user.UserClient;
 import ecommerce.orderService.exception.EntityNotFoundException;
 import ecommerce.orderService.messaging.event.OrderPendingEvent;
 import ecommerce.orderService.messaging.event.OrderReserveProductEvent;
+import ecommerce.orderService.messaging.event.ProductReservationFailedForOrderEvent;
 import ecommerce.orderService.messaging.event.ProductReservedForOrderEvent;
+import ecommerce.orderService.messaging.event.UserApprovalFailedForOrderEvent;
 import ecommerce.orderService.messaging.event.UserApprovedForOrderEvent;
 import ecommerce.orderService.messaging.producer.OrderEventProducer;
 import ecommerce.orderService.order.domain.Order;
@@ -75,6 +77,27 @@ public class OrderService {
 	}
 
 	/**
+	 * 주문을 취소하고, 상품 재고를 원상복구한 후 취소된 주문의 응답을 반환하는 메서드입니다.
+	 *
+	 * @param id 주문 ID
+	 * @return 취소된 주문의 응답 정보
+	 */
+	public OrderResponse cancelOrder(Long id) {
+		// 주문 조회, 없으면 예외 발생
+		Order order = orderRepository.findByIdWithProducts(id)
+			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found."));
+
+		// 상품 재고를 원상복구하는 요청
+		productClient.bulkIncreaseProduct(order.toProductBulkIncreaseRequest());
+
+		// 주문 취소 처리
+		order.cancel();
+
+		// 주문 응답 객체 반환
+		return OrderResponse.from(order);
+	}
+
+	/**
 	 * 비동기 방식으로 주문을 등록하고, 주문 상태를 'pending' 으로 설정 후 이벤트를 발송하는 메서드입니다.
 	 *
 	 * @param orderRequest 주문 요청 정보
@@ -105,6 +128,20 @@ public class OrderService {
 	}
 
 	/**
+	 * 상품 예약이 완료된 후 주문을 완료 처리하는 메서드입니다.
+	 *
+	 * @param event 상품 예약 완료 이벤트
+	 */
+	public void complete(ProductReservedForOrderEvent event) {
+		// 주문과 해당 주문의 상품 정보를 조회
+		Order order = orderRepository.findByIdWithProducts(event.getOrderId())
+			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + event.getOrderId() + " not found."));
+
+		// 주문 완료 처리
+		order.complete();
+	}
+
+	/**
 	 * 모든 주문 정보를 조회하여 응답 객체로 반환하는 메서드입니다.
 	 *
 	 * @return 모든 주문의 응답 리스트
@@ -130,37 +167,29 @@ public class OrderService {
 	}
 
 	/**
-	 * 상품 예약이 완료된 후 주문을 완료 처리하는 메서드입니다.
+	 * 사용자의 승인 실패로 인해 주문을 취소하고 검증 실패 상태로 처리하는 메서드입니다.
 	 *
-	 * @param event 상품 예약 완료 이벤트
+	 * @param event 승인 실패에 대한 세부 정보를 포함한 이벤트
 	 */
-	public void complete(ProductReservedForOrderEvent event) {
-		// 주문과 해당 주문의 상품 정보를 조회
-		Order order = orderRepository.findByIdWithProducts(event.getOrderId())
-			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + event.getOrderId() + " not found."));
-
-		// 주문 완료 처리
-		order.complete();
+	public void userFailed(UserApprovalFailedForOrderEvent event) {
+		// 주문 조회, 없으면 예외 발생
+		Order order = orderRepository.findById(event.getOrderId())
+			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
+		// 유저 검증 실패 처리
+		order.userFailed();
 	}
 
 	/**
-	 * 주문을 취소하고, 상품 재고를 원상복구한 후 취소된 주문의 응답을 반환하는 메서드입니다.
+	 * 제품 예약 실패로 인해 주문을 취소하고 제품 실패 상태로 처리하는 메서드입니다.
 	 *
-	 * @param id 주문 ID
-	 * @return 취소된 주문의 응답 정보
+	 * @param event 제품 예약 실패에 대한 세부 정보를 포함한 이벤트
 	 */
-	public OrderResponse cancelOrder(Long id) {
+	public void productFailed(ProductReservationFailedForOrderEvent event) {
 		// 주문 조회, 없으면 예외 발생
-		Order order = orderRepository.findByIdWithProducts(id)
-			.orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found."));
-
-		// 상품 재고를 원상복구하는 요청
-		productClient.bulkIncreaseProduct(order.toProductBulkIncreaseRequest());
-
-		// 주문 취소 처리
-		order.cancel();
-
-		// 주문 응답 객체 반환
-		return OrderResponse.from(order);
+		Order order = orderRepository.findById(event.getOrderId())
+			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
+		// 제품 예약 실패 처리
+		order.productFailed();
 	}
+
 }
