@@ -8,6 +8,8 @@ import ecommerce.userService.user.dto.UserResponse;
 import ecommerce.userService.user.domain.User;
 import ecommerce.userService.exception.EntityNotFoundException;
 import ecommerce.userService.user.dto.UserUpdateRequest;
+import ecommerce.userService.user.dto.UserValidateRequest;
+import ecommerce.userService.user.dto.UserValidateResponse;
 import ecommerce.userService.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -89,7 +91,7 @@ public class UserService {
 			.orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found"));
 
 		// 기존 비밀번호 검증
-		if(!passwordEncoder.matches(userRequest.getUserPassword(), user.getUserPassword())) {
+		if (!passwordEncoder.matches(userRequest.getUserPassword(), user.getUserPassword())) {
 			throw new IllegalArgumentException("Invalid password");
 		}
 
@@ -133,5 +135,28 @@ public class UserService {
 		// 사용자 승인 이벤트 발송
 		userEventProducer.sendUserApprovedForOrderEvent(
 			UserApprovedForOrderEvent.from(orderPendingEvent.getOrderId(), user));
+	}
+
+	/**
+	 * 사용자 유효성을 검증하는 메서드
+	 *
+	 * @param userValidateRequest 사용자 검증 요청 객체 (ID와 비밀번호를 포함)
+	 * @return 사용자 정보를 담은 UserValidateResponse 객체
+	 * @throws EntityNotFoundException 사용자 ID가 존재하지 않을 경우 예외 발생
+	 * @throws IllegalArgumentException 비밀번호가 일치하지 않을 경우 예외 발생
+	 */
+	public UserValidateResponse validateUser(UserValidateRequest userValidateRequest) {
+		// 사용자 ID로 사용자 조회, 없으면 EntityNotFoundException 발생
+		User user = userRepository.findByUserId(userValidateRequest.getUserId()).orElseThrow(() ->
+			new EntityNotFoundException("User with ID " + userValidateRequest.getUserId() + " not found"));
+
+		// 요청된 비밀번호와 저장된 비밀번호 비교 (평문 비밀번호와 해시된 비밀번호 매칭 검증)
+		if(!passwordEncoder.matches(userValidateRequest.getUserPassword(), user.getUserPassword())) {
+			// 비밀번호가 일치하지 않을 경우 예외를 발생시킴
+			throw new IllegalArgumentException("Invalid password");
+		}
+
+		// 검증된 사용자 정보를 UserValidateResponse 객체로 변환하여 반환
+		return UserValidateResponse.from(user);
 	}
 }

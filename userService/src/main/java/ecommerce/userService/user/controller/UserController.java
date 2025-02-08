@@ -3,6 +3,8 @@ package ecommerce.userService.user.controller;
 import ecommerce.userService.user.dto.UserRequest;
 import ecommerce.userService.user.dto.UserResponse;
 import ecommerce.userService.user.dto.UserUpdateRequest;
+import ecommerce.userService.user.dto.UserValidateRequest;
+import ecommerce.userService.user.dto.UserValidateResponse;
 import ecommerce.userService.user.service.UserService;
 import ecommerce.userService.global.ApiResult;
 import jakarta.validation.Valid;
@@ -44,5 +46,10 @@ public class UserController {
 	public ApiResult<Void> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
 		return ApiResult.success(null);
+	}
+
+	@PostMapping("/validate")
+	public ApiResult<UserValidateResponse> validateUser(@Valid @RequestBody UserValidateRequest userValidateRequest) {
+		return ApiResult.success(userService.validateUser(userValidateRequest));
 	}
 }
