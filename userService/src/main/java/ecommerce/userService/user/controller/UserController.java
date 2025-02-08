@@ -2,6 +2,7 @@ package ecommerce.userService.user.controller;
 
 import ecommerce.userService.user.dto.UserRequest;
 import ecommerce.userService.user.dto.UserResponse;
+import ecommerce.userService.user.dto.UserUpdateRequest;
 import ecommerce.userService.user.service.UserService;
 import ecommerce.userService.global.ApiResult;
 import jakarta.validation.Valid;
@@ -35,7 +36,7 @@ public class UserController {
 
 	@PutMapping("/{id}")
 	public ApiResult<UserResponse> updateUser(@PathVariable Long id,
-		@Valid @RequestBody UserRequest userRequest) {
+		@Valid @RequestBody UserUpdateRequest userRequest) {
 		return ApiResult.success(userService.updateUser(id, userRequest));
 	}
 

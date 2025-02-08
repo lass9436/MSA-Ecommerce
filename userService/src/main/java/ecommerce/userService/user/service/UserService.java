@@ -7,9 +7,11 @@ import ecommerce.userService.user.dto.UserRequest;
 import ecommerce.userService.user.dto.UserResponse;
 import ecommerce.userService.user.domain.User;
 import ecommerce.userService.exception.EntityNotFoundException;
+import ecommerce.userService.user.dto.UserUpdateRequest;
 import ecommerce.userService.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,7 @@ import java.util.List;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 	private final UserEventProducer userEventProducer;
 
 	/**
@@ -30,8 +33,11 @@ public class UserService {
 	 * @return 등록된 사용자 정보를 담은 UserResponse 객체
 	 */
 	public UserResponse registerUser(UserRequest userRequest) {
+		// 비밀번호 해싱
+		String hashedPassword = passwordEncoder.encode(userRequest.getUserPassword());
+
 		// UserRequest 에서 받은 데이터로 새로운 User 객체 생성
-		User user = new User(userRequest.getUserId(), userRequest.getUserPassword(), userRequest.getUserName());
+		User user = new User(userRequest.getUserId(), hashedPassword, userRequest.getUserName());
 
 		// 사용자 정보 저장
 		// 사용자 정보를 데이터베이스에 저장
@@ -77,13 +83,21 @@ public class UserService {
 	 * @return 수정된 사용자 정보를 담은 UserResponse 객체
 	 * @throws EntityNotFoundException 사용자 ID가 없을 경우 예외 발생
 	 */
-	public UserResponse updateUser(Long id, UserRequest userRequest) {
+	public UserResponse updateUser(Long id, UserUpdateRequest userRequest) {
 		// 사용자 ID로 사용자 조회, 없으면 EntityNotFoundException 발생
 		User user = userRepository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found"));
 
+		// 기존 비밀번호 검증
+		if(!passwordEncoder.matches(userRequest.getUserPassword(), user.getUserPassword())) {
+			throw new IllegalArgumentException("Invalid password");
+		}
+
+		// 비밀번호 해싱
+		String hashedPassword = passwordEncoder.encode(userRequest.getNewUserPassword());
+
 		// User 객체의 정보를 업데이트
-		user.update(userRequest.getUserId(), userRequest.getUserName(), userRequest.getUserPassword());
+		user.update(userRequest.getUserId(), hashedPassword, userRequest.getUserName());
 
 		// 수정된 사용자 정보를 UserResponse 로 반환
 		return UserResponse.from(user);
