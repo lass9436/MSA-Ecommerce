@@ -33,9 +33,11 @@ public class JwtService {
 
 
 	// Access Token 생성
-	public String generateAccessToken(String userId) {
+	public String generateUserAccessToken(String userId) {
 		return Jwts.builder()
 			.subject(userId)
+			.claim("type", "access")
+			.claim("role", "USER")
 			.issuedAt(new Date())
 			.expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
 			.signWith(KEY)
@@ -43,9 +45,35 @@ public class JwtService {
 	}
 
 	// Refresh Token 생성
-	public String generateRefreshToken(String userId) {
+	public String generateUserRefreshToken(String userId) {
 		return Jwts.builder()
 			.subject(userId)
+			.claim("type", "refresh")
+			.claim("role", "USER")
+			.issuedAt(new Date())
+			.expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
+			.signWith(KEY)
+			.compact();
+	}
+
+	// Access Token 생성
+	public String generateSellerAccessToken(String sellerId) {
+		return Jwts.builder()
+			.subject(sellerId)
+			.claim("type", "access")
+			.claim("role", "SELLER")
+			.issuedAt(new Date())
+			.expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
+			.signWith(KEY)
+			.compact();
+	}
+
+	// Refresh Token 생성
+	public String generateSellerRefreshToken(String sellerId) {
+		return Jwts.builder()
+			.subject(sellerId)
+			.claim("type", "refresh")
+			.claim("role", "SELLER")
 			.issuedAt(new Date())
 			.expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
 			.signWith(KEY)
@@ -72,6 +100,19 @@ public class JwtService {
 	public boolean isTokenExpired(String token) {
 		Date expiration = parseToken(token).getExpiration();
 		return expiration.before(new Date());
+	}
+
+	public boolean isTokenValid(String token) {
+		try {
+			parseToken(token); // 토큰 파싱
+			return true;
+		} catch (Exception e) {
+			return false; // 유효하지 않다면 false 반환
+		}
+	}
+
+	public long getTokenExpiration(String token) {
+		return parseToken(token).getExpiration().getTime();
 	}
 
 }
