@@ -1,13 +1,5 @@
 server:
   port: 9020
-  http2:
-    enabled: true
-  ssl:
-    enabled: true
-    key-store: server.p12
-    key-store-password: 1234
-    key-store-type: PKCS12
-    key-alias: bns-ssl
 
 spring:
   application:
@@ -21,11 +13,7 @@ spring:
       http2client:
         enabled: true
 
-product:
-  service:
-    url: https://localhost:9010
-
-user:
-  service:
-    url: https://localhost:9030
+api:
+  gateway:
+    url: https://localhost:9070
 

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import ecommerce.orderService.global.ApiResult;
 
-@FeignClient(name = "user-service", url = "${user.service.url}")
+@FeignClient(name = "user-service", url = "${api.gateway.url}")
 public interface UserClientInterface {
 
 	@GetMapping("/api/users/{userSeq}")

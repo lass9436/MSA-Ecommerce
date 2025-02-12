@@ -1,13 +1,5 @@
 server:
   port: 9030
-  http2:
-    enabled: true
-  ssl:
-    enabled: true
-    key-store: server.p12
-    key-store-password: 1234
-    key-store-type: PKCS12
-    key-alias: bns-ssl
 
 spring:
   application:
@@ -33,6 +25,6 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
-product:
-  service:
-    url: https://localhost:9010
+api:
+  gateway:
+    url: https://localhost:9070

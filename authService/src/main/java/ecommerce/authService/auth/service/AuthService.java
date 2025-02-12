@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import ecommerce.authService.auth.dto.LoginRequest;
 import ecommerce.authService.auth.dto.LoginResponse;
-import ecommerce.authService.auth.dto.LogoutRequest;
 import ecommerce.authService.client.user.UserClient;
 import ecommerce.authService.client.user.UserValidateRequest;
 import ecommerce.authService.client.user.UserValidateResponse;

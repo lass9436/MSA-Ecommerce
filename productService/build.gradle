@@ -25,7 +25,6 @@ dependencyManagement {
     }
 }
 
-
 repositories {
     mavenCentral()
 }

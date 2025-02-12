@@ -12,3 +12,12 @@ server:
 spring:
   application:
     name: apiGateway
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 10000
+
+jwt:
+  secret: 552925bb-fddf-4b48-8d9f-fe902dcf12fd
+

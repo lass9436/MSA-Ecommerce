@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import ecommerce.orderService.global.ApiResult;
 
-@FeignClient(name = "product-service", url = "${product.service.url}")
+@FeignClient(name = "product-service", url = "${api.gateway.url}")
 public interface ProductClientInterface {
 
 	@GetMapping("/api/products/{productId}")
