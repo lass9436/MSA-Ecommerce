@@ -25,11 +25,11 @@ public class GatewayConfig {
 
 			// Product-Service (Products Endpoint)
 			.route("product-service-products", r -> r.path("/api/products/**")
-				.uri("http://localhost:9010/"))
+				.uri("http://localhost:9090/"))
 
 			// Product-Service (Stores Endpoint)
 			.route("product-service-stores", r -> r.path("/api/stores/**")
-				.uri("http://localhost:9010/"))
+				.uri("http://localhost:9090/"))
 
 			// Seller-Service
 			.route("seller-service", r -> r.path("/api/sellers/**")
