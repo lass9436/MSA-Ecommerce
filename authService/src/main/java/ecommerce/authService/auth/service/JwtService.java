@@ -33,10 +33,11 @@ public class JwtService {
 
 
 	// Access Token 생성
-	public String generateUserAccessToken(String userId) {
+	public String generateUserAccessToken(Long userSeq, String userId) {
 		return Jwts.builder()
 			.subject(userId)
 			.claim("type", "access")
+			.claim("userSeq", userSeq)
 			.claim("role", "USER")
 			.issuedAt(new Date())
 			.expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
@@ -45,10 +46,11 @@ public class JwtService {
 	}
 
 	// Refresh Token 생성
-	public String generateUserRefreshToken(String userId) {
+	public String generateUserRefreshToken(Long userSeq, String userId) {
 		return Jwts.builder()
 			.subject(userId)
 			.claim("type", "refresh")
+			.claim("userSeq", userSeq)
 			.claim("role", "USER")
 			.issuedAt(new Date())
 			.expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
@@ -57,10 +59,11 @@ public class JwtService {
 	}
 
 	// Access Token 생성
-	public String generateSellerAccessToken(String sellerId) {
+	public String generateSellerAccessToken(Long sellerSeq, String sellerId) {
 		return Jwts.builder()
 			.subject(sellerId)
 			.claim("type", "access")
+			.claim("sellerSeq", sellerSeq)
 			.claim("role", "SELLER")
 			.issuedAt(new Date())
 			.expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
@@ -69,10 +72,11 @@ public class JwtService {
 	}
 
 	// Refresh Token 생성
-	public String generateSellerRefreshToken(String sellerId) {
+	public String generateSellerRefreshToken(Long sellerSeq, String sellerId) {
 		return Jwts.builder()
 			.subject(sellerId)
 			.claim("type", "refresh")
+			.claim("sellerSeq", sellerSeq)
 			.claim("role", "SELLER")
 			.issuedAt(new Date())
 			.expiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))

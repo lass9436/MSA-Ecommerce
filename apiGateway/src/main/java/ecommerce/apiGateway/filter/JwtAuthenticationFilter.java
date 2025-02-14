@@ -29,10 +29,12 @@ public class JwtAuthenticationFilter implements WebFilter {
 					Claims claims = jwtVerifier.parseToken(token);
 					String userId = claims.getSubject();
 					String role = claims.get("role", String.class);
+					Long userSeq = claims.get("userSeq", Long.class);
 
 					ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
 						.header("X-User-Id", userId) // 사용자 ID를 추가
 						.header("X-User-Role", role) // 역할을 추가
+						.header("X-User-Seq", String.valueOf(userSeq)) // seq 를 추가
 						.build();
 
 					return chain.filter(exchange.mutate().request(modifiedRequest).build());

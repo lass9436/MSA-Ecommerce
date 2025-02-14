@@ -23,11 +23,12 @@ public class AuthService {
 		// 유저 검증
 		UserValidateRequest userValidateRequest = UserValidateRequest.from(loginRequest);
 		UserValidateResponse validatedUser = userClient.validateUser(userValidateRequest);
+		Long userSeq = validatedUser.getUserSeq();
 		String userId = validatedUser.getUserId();
 
 		// 토큰 생성
-		String accessToken = jwtService.generateUserAccessToken(userId);
-		String refreshToken = jwtService.generateUserRefreshToken(userId);
+		String accessToken = jwtService.generateUserAccessToken(userSeq, userId);
+		String refreshToken = jwtService.generateUserRefreshToken(userSeq, userId);
 
 		// 3. Refresh Token 을 Redis 에 저장
 		long refreshTokenExpiration = jwtService.getTokenExpiration(refreshToken) - System.currentTimeMillis();

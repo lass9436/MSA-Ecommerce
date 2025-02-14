@@ -1,5 +1,9 @@
 package ecommerce.userService.user.controller;
 
+import static ecommerce.userService.exception.ErrorCodes.*;
+
+import ecommerce.userService.global.Login;
+import ecommerce.userService.global.LoginUser;
 import ecommerce.userService.user.dto.UserRequest;
 import ecommerce.userService.user.dto.UserResponse;
 import ecommerce.userService.user.dto.UserUpdateRequest;
@@ -37,13 +41,19 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public ApiResult<UserResponse> updateUser(@PathVariable Long id,
+	public ApiResult<UserResponse> updateUser(@Login LoginUser user, @PathVariable Long id,
 		@Valid @RequestBody UserUpdateRequest userRequest) {
+		if (!user.getUserSeq().equals(id)) {
+			return ApiResult.failure(UNAUTHORIZED_ACTION, "Not authorized");
+		}
 		return ApiResult.success(userService.updateUser(id, userRequest));
 	}
 
 	@DeleteMapping("/{id}")
-	public ApiResult<Void> deleteUser(@PathVariable Long id) {
+	public ApiResult<Void> deleteUser(@Login LoginUser user, @PathVariable Long id) {
+		if (!user.getUserSeq().equals(id)) {
+			return ApiResult.failure(UNAUTHORIZED_ACTION, "Not authorized");
+		}
 		userService.deleteUser(id);
 		return ApiResult.success(null);
 	}
