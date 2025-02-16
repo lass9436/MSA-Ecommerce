@@ -1,5 +1,7 @@
 package ecommerce.orderService.messaging.producer;
 
+import static ecommerce.orderService.messaging.event.EventName.*;
+
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +17,10 @@ public class OrderEventProducer {
 	private final KafkaTemplate<String, OrderPendingEvent> orderPendingEventKafkaTemplate;
 
 	public void sendOrderPendingEvent(OrderPendingEvent event) {
-		orderPendingEventKafkaTemplate.send("order-pending", event);
+		orderPendingEventKafkaTemplate.send(ORDER_PENDING, event);
 	}
 
 	public void sendOrderReserveProductEvent(OrderReserveProductEvent event) {
-		orderCreatedEventKafkaTemplate.send("order-reserve-product", event);
+		orderCreatedEventKafkaTemplate.send(ORDER_RESERVE_PRODUCT, event);
 	}
 }

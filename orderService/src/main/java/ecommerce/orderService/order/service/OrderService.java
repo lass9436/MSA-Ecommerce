@@ -19,6 +19,7 @@ import ecommerce.orderService.messaging.event.ProductReservedForOrderEvent;
 import ecommerce.orderService.messaging.event.UserApprovalFailedForOrderEvent;
 import ecommerce.orderService.messaging.event.UserApprovedForOrderEvent;
 import ecommerce.orderService.messaging.producer.OrderEventProducer;
+import ecommerce.orderService.messaging.outbox.EventOutboxService;
 import ecommerce.orderService.order.domain.Order;
 import ecommerce.orderService.order.dto.OrderMapper;
 import ecommerce.orderService.order.dto.OrderProductRequest;
@@ -35,7 +36,7 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final ProductClient productClient;
 	private final UserClient userClient;
-	private final OrderEventProducer orderEventProducer;
+	private final EventOutboxService eventOutboxService;
 
 	/**
 	 * 주문을 등록하고, 상품의 재고를 차감한 후 주문을 완료 처리하는 메서드입니다.
@@ -110,7 +111,7 @@ public class OrderService {
 		orderRepository.save(order.pending());
 
 		// 주문 상태 'pending' 이벤트 발송
-		orderEventProducer.sendOrderPendingEvent(OrderPendingEvent.from(order));
+		eventOutboxService.saveOrderPendingEvent(OrderPendingEvent.from(order));
 	}
 
 	/**
@@ -124,7 +125,7 @@ public class OrderService {
 			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
 		// 상품 예약 이벤트 발송
-		orderEventProducer.sendOrderReserveProductEvent(OrderReserveProductEvent.from(order));
+		eventOutboxService.saveOrderReserveProductEvent(OrderReserveProductEvent.from(order));
 	}
 
 	/**

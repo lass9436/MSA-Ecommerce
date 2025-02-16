@@ -1,5 +1,7 @@
 package ecommerce.orderService.messaging.consumer;
 
+import static ecommerce.orderService.messaging.event.EventName.*;
+
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,7 @@ public class UserEventConsumer {
 	private final OrderService orderService;
 	private final ObjectMapper objectMapper;
 
-	@KafkaListener(topics = "user-approved-for-order")
+	@KafkaListener(topics = USER_APPROVED_FOR_ORDER)
 	public void handleUserApprovedForOrder(byte[] message) {
 		try {
 			UserApprovedForOrderEvent event = objectMapper.readValue(message, UserApprovedForOrderEvent.class);
@@ -27,7 +29,7 @@ public class UserEventConsumer {
 		}
 	}
 
-	@KafkaListener(topics = "user-approval-failed-for-order")
+	@KafkaListener(topics = USER_APPROVAL_FAILED_FOR_ORDER)
 	public void handleUserApprovalFailedForOrder(byte[] message) {
 		try {
 			UserApprovalFailedForOrderEvent event = objectMapper.readValue(message, UserApprovalFailedForOrderEvent.class);
