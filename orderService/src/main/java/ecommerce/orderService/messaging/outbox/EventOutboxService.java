@@ -3,7 +3,6 @@ package ecommerce.orderService.messaging.outbox;
 import static ecommerce.orderService.messaging.event.EventName.*;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -12,9 +11,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ecommerce.orderService.messaging.event.OrderPendingEvent;
 import ecommerce.orderService.messaging.event.OrderReserveProductEvent;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class EventOutboxService {
 
@@ -23,23 +24,23 @@ public class EventOutboxService {
 	private final ApplicationEventPublisher applicationEventPublisher;
 
 	public void saveOrderPendingEvent(OrderPendingEvent event) {
-		saveEvent(event, ORDER_PENDING);
+		saveEvent(event, ORDER_PENDING, event.getIdempotencyKey());
 	}
 
 	public void saveOrderReserveProductEvent(OrderReserveProductEvent event) {
-		saveEvent(event, ORDER_RESERVE_PRODUCT);
+		saveEvent(event, ORDER_RESERVE_PRODUCT, event.getIdempotencyKey());
 	}
 
-	private void saveEvent(Object event, String eventName) {
+	private void saveEvent(Object event, String eventName, String idempotencyKey) {
 		String payload = objectMapper.convertValue(event, String.class);
-		EventOutbox eventOutbox = createEventOutbox(payload, eventName);
+		EventOutbox eventOutbox = createEventOutbox(payload, eventName, idempotencyKey);
 		eventOutboxRepository.save(eventOutbox);
 		applicationEventPublisher.publishEvent(event);
 	}
 
-	private EventOutbox createEventOutbox(String payload, String eventName) {
+	private EventOutbox createEventOutbox(String payload, String eventName, String idempotencyKey) {
 		return EventOutbox.builder()
-			.idempotencyKey(UUID.randomUUID().toString())
+			.idempotencyKey(idempotencyKey)
 			.eventName(eventName)
 			.type(EventType.PUBLISH)
 			.status(EventStatus.PENDING)
@@ -48,4 +49,15 @@ public class EventOutboxService {
 			.build();
 	}
 
+	public void successEvent(String idempotencyKey) {
+		EventOutbox eventOutbox = eventOutboxRepository.findByIdempotencyKey(idempotencyKey)
+			.orElseThrow(() -> new IllegalArgumentException("Event not found for idempotency key: " + idempotencyKey));
+		eventOutbox.success();
+	}
+
+	public void failureEvent(String idempotencyKey) {
+		EventOutbox eventOutbox = eventOutboxRepository.findByIdempotencyKey(idempotencyKey)
+			.orElseThrow(() -> new IllegalArgumentException("Event not found for idempotency key: " + idempotencyKey));
+		eventOutbox.failure();
+	}
 }

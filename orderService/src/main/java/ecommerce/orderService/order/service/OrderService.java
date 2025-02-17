@@ -18,7 +18,6 @@ import ecommerce.orderService.messaging.event.ProductReservationFailedForOrderEv
 import ecommerce.orderService.messaging.event.ProductReservedForOrderEvent;
 import ecommerce.orderService.messaging.event.UserApprovalFailedForOrderEvent;
 import ecommerce.orderService.messaging.event.UserApprovedForOrderEvent;
-import ecommerce.orderService.messaging.producer.OrderEventProducer;
 import ecommerce.orderService.messaging.outbox.EventOutboxService;
 import ecommerce.orderService.order.domain.Order;
 import ecommerce.orderService.order.dto.OrderMapper;
@@ -110,7 +109,7 @@ public class OrderService {
 		// 주문 상태를 'pending' 으로 설정 후 저장
 		orderRepository.save(order.pending());
 
-		// 주문 상태 'pending' 이벤트 발송
+		// 주문 상태 'pending' 이벤트 저장
 		eventOutboxService.saveOrderPendingEvent(OrderPendingEvent.from(order));
 	}
 
@@ -124,7 +123,7 @@ public class OrderService {
 		Order order = orderRepository.findByIdWithProducts(event.getOrderId())
 			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
-		// 상품 예약 이벤트 발송
+		// 상품 예약 이벤트 저장
 		eventOutboxService.saveOrderReserveProductEvent(OrderReserveProductEvent.from(order));
 	}
 

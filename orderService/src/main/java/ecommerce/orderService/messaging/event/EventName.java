@@ -9,5 +9,6 @@ public final class EventName { // 상수 전용 클래스로 선언, 외부에�
 	public static final String USER_APPROVED_FOR_ORDER = "USER_APPROVED_FOR_ORDER";
 
 	// 개인 생성자 방지 (객체 생성 불가)
-	private EventName() {}
+	private EventName() {
+	}
 }
