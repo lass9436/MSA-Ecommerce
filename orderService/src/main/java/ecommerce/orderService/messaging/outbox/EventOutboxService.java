@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ecommerce.orderService.messaging.event.OrderPendingEvent;
-import ecommerce.orderService.messaging.event.OrderReserveProductEvent;
+import ecommerce.orderService.messaging.event.publish.OrderPendingEvent;
+import ecommerce.orderService.messaging.event.publish.OrderReserveProductEvent;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 

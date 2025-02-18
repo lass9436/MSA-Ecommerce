@@ -1,4 +1,4 @@
-package ecommerce.orderService.messaging.event;
+package ecommerce.orderService.messaging.event.consume;
 
 import lombok.Builder;
 import lombok.Getter;

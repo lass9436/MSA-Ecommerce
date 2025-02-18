@@ -1,4 +1,4 @@
-package ecommerce.orderService.messaging.event;
+package ecommerce.orderService.messaging.event.publish;
 
 import ecommerce.orderService.order.domain.OrderProduct;
 import lombok.Builder;

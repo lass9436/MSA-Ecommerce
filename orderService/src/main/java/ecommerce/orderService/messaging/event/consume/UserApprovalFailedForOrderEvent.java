@@ -1,11 +1,11 @@
-package ecommerce.orderService.messaging.event;
+package ecommerce.orderService.messaging.event.consume;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class UserApprovedForOrderEvent {
+public class UserApprovalFailedForOrderEvent {
 	private Long orderId;
 	private Long userSeq;
 }

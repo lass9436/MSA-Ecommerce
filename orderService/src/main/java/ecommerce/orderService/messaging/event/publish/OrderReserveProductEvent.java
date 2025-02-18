@@ -1,4 +1,4 @@
-package ecommerce.orderService.messaging.event;
+package ecommerce.orderService.messaging.event.publish;
 
 import java.util.List;
 import java.util.UUID;

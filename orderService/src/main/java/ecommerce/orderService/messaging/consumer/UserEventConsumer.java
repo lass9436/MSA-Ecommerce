@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ecommerce.orderService.messaging.event.UserApprovalFailedForOrderEvent;
-import ecommerce.orderService.messaging.event.UserApprovedForOrderEvent;
+import ecommerce.orderService.messaging.event.consume.UserApprovalFailedForOrderEvent;
+import ecommerce.orderService.messaging.event.consume.UserApprovedForOrderEvent;
 import ecommerce.orderService.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 
