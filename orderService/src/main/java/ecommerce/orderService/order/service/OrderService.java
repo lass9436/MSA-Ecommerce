@@ -14,9 +14,6 @@ import ecommerce.orderService.client.user.UserClient;
 import ecommerce.orderService.exception.EntityNotFoundException;
 import ecommerce.orderService.messaging.event.consume.ProductReservationFailedForOrderEvent;
 import ecommerce.orderService.messaging.event.consume.ProductReservedForOrderEvent;
-import ecommerce.orderService.messaging.event.consume.UserApprovalFailedForOrderEvent;
-import ecommerce.orderService.messaging.event.consume.UserApprovedForOrderEvent;
-import ecommerce.orderService.messaging.event.publish.OrderPendingEvent;
 import ecommerce.orderService.messaging.event.publish.OrderReserveProductEvent;
 import ecommerce.orderService.messaging.outbox.EventOutboxService;
 import ecommerce.orderService.order.domain.Order;
@@ -110,20 +107,6 @@ public class OrderService {
 		orderRepository.save(order.pending());
 
 		// 주문 상태 'pending' 이벤트 저장
-		eventOutboxService.saveOrderPendingEvent(OrderPendingEvent.from(order));
-	}
-
-	/**
-	 * 사용자 승인 이벤트를 받아 상품 예약을 처리하는 메서드입니다.
-	 *
-	 * @param event 사용자 승인 이벤트
-	 */
-	public void reserveProduct(UserApprovedForOrderEvent event) {
-		// 주문과 해당 주문의 상품 정보를 조회
-		Order order = orderRepository.findByIdWithProducts(event.getOrderId())
-			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
-
-		// 상품 예약 이벤트 저장
 		eventOutboxService.saveOrderReserveProductEvent(OrderReserveProductEvent.from(order));
 	}
 
@@ -164,19 +147,6 @@ public class OrderService {
 		return OrderResponse.from(
 			orderRepository.findByIdWithProducts(id)
 				.orElseThrow(() -> new EntityNotFoundException("Order with ID " + id + " not found.")));
-	}
-
-	/**
-	 * 사용자의 승인 실패로 인해 주문을 취소하고 검증 실패 상태로 처리하는 메서드입니다.
-	 *
-	 * @param event 승인 실패에 대한 세부 정보를 포함한 이벤트
-	 */
-	public void userFailed(UserApprovalFailedForOrderEvent event) {
-		// 주문 조회, 없으면 예외 발생
-		Order order = orderRepository.findById(event.getOrderId())
-			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
-		// 유저 검증 실패 처리
-		order.userFailed();
 	}
 
 	/**

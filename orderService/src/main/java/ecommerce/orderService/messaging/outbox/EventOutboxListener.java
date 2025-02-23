@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import ecommerce.orderService.messaging.event.publish.OrderPendingEvent;
 import ecommerce.orderService.messaging.event.publish.OrderReserveProductEvent;
 import ecommerce.orderService.messaging.producer.OrderEventProducer;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +13,6 @@ import lombok.RequiredArgsConstructor;
 public class EventOutboxListener {
 
 	private final OrderEventProducer orderEventProducer;
-
-	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-	public void onOrderPendingEvent(OrderPendingEvent event) {
-		orderEventProducer.sendOrderPendingEvent(event);
-	}
 
 	@TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 	public void onOrderReserveProductEvent(OrderReserveProductEvent event) {

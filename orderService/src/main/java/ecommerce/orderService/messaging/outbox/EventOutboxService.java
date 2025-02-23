@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ecommerce.orderService.messaging.event.publish.OrderPendingEvent;
 import ecommerce.orderService.messaging.event.publish.OrderReserveProductEvent;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +21,6 @@ public class EventOutboxService {
 	private final ObjectMapper objectMapper;
 	private final EventOutboxRepository eventOutboxRepository;
 	private final ApplicationEventPublisher applicationEventPublisher;
-
-	public void saveOrderPendingEvent(OrderPendingEvent event) {
-		saveEvent(event, ORDER_PENDING, event.getIdempotencyKey());
-	}
 
 	public void saveOrderReserveProductEvent(OrderReserveProductEvent event) {
 		saveEvent(event, ORDER_RESERVE_PRODUCT, event.getIdempotencyKey());

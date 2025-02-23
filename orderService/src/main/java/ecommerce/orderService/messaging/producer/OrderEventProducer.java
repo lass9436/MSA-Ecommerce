@@ -6,7 +6,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
-import ecommerce.orderService.messaging.event.publish.OrderPendingEvent;
 import ecommerce.orderService.messaging.event.publish.OrderReserveProductEvent;
 import ecommerce.orderService.messaging.outbox.EventOutboxService;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderEventProducer {
 
 	private final KafkaTemplate<String, OrderReserveProductEvent> orderCreatedEventKafkaTemplate;
-	private final KafkaTemplate<String, OrderPendingEvent> orderPendingEventKafkaTemplate;
 	private final EventOutboxService eventOutboxService;
-
-	public void sendOrderPendingEvent(OrderPendingEvent event) {
-		orderPendingEventKafkaTemplate.send(ORDER_PENDING, event)
-			.whenComplete((recordMetadata, exception) -> {
-				handleEventCompletion(event.getIdempotencyKey(), recordMetadata, exception);
-			});
-	}
 
 	public void sendOrderReserveProductEvent(OrderReserveProductEvent event) {
 		orderCreatedEventKafkaTemplate.send(ORDER_RESERVE_PRODUCT, event)
