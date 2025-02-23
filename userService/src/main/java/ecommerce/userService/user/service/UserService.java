@@ -1,23 +1,20 @@
 package ecommerce.userService.user.service;
 
-import ecommerce.userService.messaging.event.OrderPendingEvent;
-import ecommerce.userService.messaging.event.UserApprovedForOrderEvent;
-import ecommerce.userService.messaging.producer.UserEventProducer;
-import ecommerce.userService.user.dto.UserRequest;
-import ecommerce.userService.user.dto.UserResponse;
-import ecommerce.userService.user.domain.User;
-import ecommerce.userService.exception.EntityNotFoundException;
-import ecommerce.userService.user.dto.UserUpdateRequest;
-import ecommerce.userService.user.dto.UserValidateRequest;
-import ecommerce.userService.user.dto.UserValidateResponse;
-import ecommerce.userService.user.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import ecommerce.userService.exception.EntityNotFoundException;
+import ecommerce.userService.user.domain.User;
+import ecommerce.userService.user.dto.UserRequest;
+import ecommerce.userService.user.dto.UserResponse;
+import ecommerce.userService.user.dto.UserUpdateRequest;
+import ecommerce.userService.user.dto.UserValidateRequest;
+import ecommerce.userService.user.dto.UserValidateResponse;
+import ecommerce.userService.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +23,6 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final UserEventProducer userEventProducer;
 
 	/**
 	 * 사용자 등록 메서드
@@ -121,23 +117,6 @@ public class UserService {
 	}
 
 	/**
-	 * 주문을 위한 사용자 검증 메서드
-	 *
-	 * @param orderPendingEvent 주문 대기 이벤트 객체
-	 * @throws EntityNotFoundException 사용자 ID가 없을 경우 예외 발생
-	 */
-	public void validateUserForOrder(OrderPendingEvent orderPendingEvent) {
-		// 주문 대기 이벤트에서 사용자 ID를 추출하여 사용자 조회
-		User user = userRepository.findById(orderPendingEvent.getUserSeq())
-			.orElseThrow(
-				() -> new EntityNotFoundException("User with ID " + orderPendingEvent.getUserSeq() + " not found"));
-
-		// 사용자 승인 이벤트 발송
-		userEventProducer.sendUserApprovedForOrderEvent(
-			UserApprovedForOrderEvent.from(orderPendingEvent.getOrderId(), user));
-	}
-
-	/**
 	 * 사용자 유효성을 검증하는 메서드
 	 *
 	 * @param userValidateRequest 사용자 검증 요청 객체 (ID와 비밀번호를 포함)
@@ -151,7 +130,7 @@ public class UserService {
 			new EntityNotFoundException("User with ID " + userValidateRequest.getUserId() + " not found"));
 
 		// 요청된 비밀번호와 저장된 비밀번호 비교 (평문 비밀번호와 해시된 비밀번호 매칭 검증)
-		if(!passwordEncoder.matches(userValidateRequest.getUserPassword(), user.getUserPassword())) {
+		if (!passwordEncoder.matches(userValidateRequest.getUserPassword(), user.getUserPassword())) {
 			// 비밀번호가 일치하지 않을 경우 예외를 발생시킴
 			throw new IllegalArgumentException("Invalid password");
 		}
