@@ -1,6 +1,6 @@
-package ecommerce.orderService.messaging.event.publish;
+package ecommerce.orderService.messaging.event.produce;
 
-import ecommerce.orderService.order.domain.OrderProduct;
+import ecommerce.orderService.order.dto.OrderProductResponse;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ public class ReservedProductItemEvent {
 	private Long storeId;
 	private Long productPrice;
 
-	public static ReservedProductItemEvent from(OrderProduct orderProduct) {
+	public static ReservedProductItemEvent from(OrderProductResponse orderProduct) {
 		return ReservedProductItemEvent.builder()
 			.productId(orderProduct.getProductId())
 			.orderQuantity(orderProduct.getOrderQuantity())

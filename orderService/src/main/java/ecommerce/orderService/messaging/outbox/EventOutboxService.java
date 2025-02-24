@@ -1,7 +1,5 @@
 package ecommerce.orderService.messaging.outbox;
 
-import static ecommerce.orderService.messaging.event.EventName.*;
-
 import java.time.LocalDateTime;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -9,7 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ecommerce.orderService.messaging.event.publish.OrderReserveProductEvent;
+import ecommerce.orderService.messaging.event.ConsumeEvent;
+import ecommerce.orderService.messaging.event.ProduceEvent;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -22,22 +21,38 @@ public class EventOutboxService {
 	private final EventOutboxRepository eventOutboxRepository;
 	private final ApplicationEventPublisher applicationEventPublisher;
 
-	public void saveOrderReserveProductEvent(OrderReserveProductEvent event) {
-		saveEvent(event, ORDER_RESERVE_PRODUCT, event.getIdempotencyKey());
-	}
-
-	private void saveEvent(Object event, String eventName, String idempotencyKey) {
+	public <T extends ProduceEvent> void saveProduceEventAndPublish(T event, String eventName) {
 		String payload = objectMapper.convertValue(event, String.class);
-		EventOutbox eventOutbox = createEventOutbox(payload, eventName, idempotencyKey);
+		EventOutbox eventOutbox = createEventOutbox(payload, EventType.PRODUCE, eventName, event.getIdempotencyKey());
 		eventOutboxRepository.save(eventOutbox);
 		applicationEventPublisher.publishEvent(event);
 	}
 
-	private EventOutbox createEventOutbox(String payload, String eventName, String idempotencyKey) {
+	public <T extends ConsumeEvent> void saveConsumeEvent(T event, String eventName, String idempotencyKey) {
+		if (isEventExists(idempotencyKey)) {
+			return;
+		}
+		String payload = objectMapper.convertValue(event, String.class);
+		EventOutbox eventOutbox = createEventOutbox(payload, EventType.CONSUME, eventName, idempotencyKey);
+		eventOutboxRepository.save(eventOutbox);
+	}
+
+	private boolean isEventExists(String idempotencyKey) {
+		return eventOutboxRepository.findByIdempotencyKey(idempotencyKey)
+			.map(existingEvent -> {
+				if (existingEvent.getStatus() != EventStatus.PENDING) {
+					throw new IllegalStateException("이벤트가 이미 처리되었습니다: " + idempotencyKey);
+				}
+				return true;
+			})
+			.orElse(false);
+	}
+
+	private EventOutbox createEventOutbox(String payload, EventType type, String eventName, String idempotencyKey) {
 		return EventOutbox.builder()
 			.idempotencyKey(idempotencyKey)
 			.eventName(eventName)
-			.type(EventType.PUBLISH)
+			.type(type)
 			.status(EventStatus.PENDING)
 			.payload(payload)
 			.createdAt(LocalDateTime.now())
