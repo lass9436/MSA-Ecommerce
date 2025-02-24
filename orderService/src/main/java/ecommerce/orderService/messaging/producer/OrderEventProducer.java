@@ -19,9 +19,9 @@ public class OrderEventProducer {
 
 	public void sendOrderReserveProductEvent(OrderReserveProductEvent event) {
 		orderCreatedEventKafkaTemplate.send(ORDER_RESERVE_PRODUCT, event)
-			.whenComplete((recordMetadata, exception) -> {
-				handleEventCompletion(event.getIdempotencyKey(), recordMetadata, exception);
-			});
+			.whenComplete((recordMetadata, exception) ->
+				handleEventCompletion(event.getIdempotencyKey(), recordMetadata, exception)
+			);
 	}
 
 	private void handleEventCompletion(String idempotencyKey, SendResult<String, ?> recordMetadata,
