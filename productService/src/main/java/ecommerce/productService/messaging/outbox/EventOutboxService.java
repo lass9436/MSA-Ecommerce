@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ecommerce.productService.messaging.event.ConsumeEvent;
-import ecommerce.productService.messaging.event.PublishEvent;
+import ecommerce.productService.messaging.event.ProduceEvent;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -21,9 +21,9 @@ public class EventOutboxService {
 	private final EventOutboxRepository eventOutboxRepository;
 	private final ApplicationEventPublisher applicationEventPublisher;
 
-	public <T extends PublishEvent> void savePublishEventAndPublish(T event, String eventName) {
+	public <T extends ProduceEvent> void saveProduceEventAndPublish(T event, String eventName) {
 		String payload = objectMapper.convertValue(event, String.class);
-		EventOutbox eventOutbox = createEventOutbox(payload, EventType.PUBLISH, eventName, event.getIdempotencyKey());
+		EventOutbox eventOutbox = createEventOutbox(payload, EventType.PRODUCE, eventName, event.getIdempotencyKey());
 		eventOutboxRepository.save(eventOutbox);
 		applicationEventPublisher.publishEvent(event);
 	}

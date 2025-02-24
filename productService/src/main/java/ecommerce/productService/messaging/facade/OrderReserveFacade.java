@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import ecommerce.productService.messaging.event.consume.OrderReserveProductEvent;
-import ecommerce.productService.messaging.event.publish.ProductReservationFailedForOrderEvent;
-import ecommerce.productService.messaging.event.publish.ProductReservedForOrderEvent;
+import ecommerce.productService.messaging.event.produce.ProductReservationFailedForOrderEvent;
+import ecommerce.productService.messaging.event.produce.ProductReservedForOrderEvent;
 import ecommerce.productService.messaging.outbox.EventOutboxService;
 import ecommerce.productService.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +29,13 @@ public class OrderReserveFacade {
 	public void processOrderReserve(OrderReserveProductEvent event) {
 		productService.reserveProduct(event);
 		eventOutboxService.successEvent(event.getIdempotencyKey());
-		eventOutboxService.savePublishEventAndPublish(ProductReservedForOrderEvent.from(event),
+		eventOutboxService.saveProduceEventAndPublish(ProductReservedForOrderEvent.from(event),
 			PRODUCT_RESERVED_FOR_ORDER);
 	}
 
 	public void compensateOrderReserve(OrderReserveProductEvent event) {
 		eventOutboxService.failureEvent(event.getIdempotencyKey());
-		eventOutboxService.savePublishEventAndPublish(ProductReservationFailedForOrderEvent.from(event),
+		eventOutboxService.saveProduceEventAndPublish(ProductReservationFailedForOrderEvent.from(event),
 			PRODUCT_RESERVATION_FAILED_FOR_ORDER);
 	}
 }

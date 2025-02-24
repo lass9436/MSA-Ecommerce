@@ -5,8 +5,8 @@ import static ecommerce.productService.messaging.event.EventName.*;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import ecommerce.productService.messaging.event.publish.ProductReservationFailedForOrderEvent;
-import ecommerce.productService.messaging.event.publish.ProductReservedForOrderEvent;
+import ecommerce.productService.messaging.event.produce.ProductReservationFailedForOrderEvent;
+import ecommerce.productService.messaging.event.produce.ProductReservedForOrderEvent;
 import lombok.RequiredArgsConstructor;
 
 @Component

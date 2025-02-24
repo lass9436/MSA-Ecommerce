@@ -1,11 +1,11 @@
-package ecommerce.productService.messaging.event.publish;
+package ecommerce.productService.messaging.event.produce;
 
-import ecommerce.productService.messaging.event.PublishEvent;
+import ecommerce.productService.messaging.event.ProduceEvent;
 import ecommerce.productService.messaging.event.consume.OrderReserveProductEvent;
 import lombok.Getter;
 
 @Getter
-public class ProductReservationFailedForOrderEvent extends PublishEvent {
+public class ProductReservationFailedForOrderEvent extends ProduceEvent {
 	private final Long orderId;
 
 	private ProductReservationFailedForOrderEvent(Long orderId) {

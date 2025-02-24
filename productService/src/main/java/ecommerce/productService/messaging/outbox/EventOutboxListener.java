@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import ecommerce.productService.messaging.event.publish.ProductReservationFailedForOrderEvent;
-import ecommerce.productService.messaging.event.publish.ProductReservedForOrderEvent;
+import ecommerce.productService.messaging.event.produce.ProductReservationFailedForOrderEvent;
+import ecommerce.productService.messaging.event.produce.ProductReservedForOrderEvent;
 import ecommerce.productService.messaging.producer.ProductEventProducer;
 import lombok.RequiredArgsConstructor;
 

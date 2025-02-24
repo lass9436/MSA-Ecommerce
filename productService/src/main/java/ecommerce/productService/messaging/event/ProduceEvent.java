@@ -7,11 +7,11 @@ import org.springframework.context.ApplicationEvent;
 import lombok.Getter;
 
 @Getter
-public abstract class PublishEvent extends ApplicationEvent {
+public abstract class ProduceEvent extends ApplicationEvent {
 
 	private final String idempotencyKey;
 
-	public PublishEvent(Object source) {
+	public ProduceEvent(Object source) {
 		super(source);
 		this.idempotencyKey = UUID.randomUUID().toString();
 	}
