@@ -21,12 +21,15 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
       properties:
         spring.json.trusted.packages: "*"
+      enable-auto-commit: false
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         enable.idempotence: true
         retries: 5
+    listener:
+      ack-mode: manual_immediate
 
 api:
   gateway:

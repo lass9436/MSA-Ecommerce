@@ -1,10 +1,12 @@
 package ecommerce.productService.messaging.producer;
 
+import static ecommerce.productService.messaging.event.EventName.*;
+
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import ecommerce.productService.messaging.event.ProductReservationFailedForOrderEvent;
-import ecommerce.productService.messaging.event.ProductReservedForOrderEvent;
+import ecommerce.productService.messaging.event.publish.ProductReservationFailedForOrderEvent;
+import ecommerce.productService.messaging.event.publish.ProductReservedForOrderEvent;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -15,11 +17,11 @@ public class ProductEventProducer {
 	private final KafkaTemplate<String, ProductReservationFailedForOrderEvent> productReservationFailedForOrderEventKafkaTemplate;
 
 	public void sendProductReservedForOrderEvent(ProductReservedForOrderEvent event) {
-		productReservedForOrderEventKafkaTemplate.send("product-reserved-for-order", event);
+		productReservedForOrderEventKafkaTemplate.send(PRODUCT_RESERVED_FOR_ORDER, event);
 	}
 
 	public void sendProductReservationFailedForOrderEvent(ProductReservationFailedForOrderEvent event) {
-		productReservationFailedForOrderEventKafkaTemplate.send("product-reservation-failed-for-order", event);
+		productReservationFailedForOrderEventKafkaTemplate.send(PRODUCT_RESERVATION_FAILED_FOR_ORDER, event);
 	}
 
 }

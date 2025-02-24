@@ -6,16 +6,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ecommerce.productService.exception.EntityNotFoundException;
-import ecommerce.productService.messaging.event.OrderReserveProductEvent;
-import ecommerce.productService.messaging.event.ProductReservedForOrderEvent;
-import ecommerce.productService.messaging.event.ReservedProductItemEvent;
-import ecommerce.productService.messaging.producer.ProductEventProducer;
-import ecommerce.productService.product.dto.*;
+import ecommerce.productService.messaging.event.consume.OrderReserveProductEvent;
+import ecommerce.productService.messaging.event.consume.ReservedProductItemEvent;
 import ecommerce.productService.product.domain.Product;
-import ecommerce.productService.store.domain.Store;
+import ecommerce.productService.product.dto.ProductBulkDecreaseRequest;
+import ecommerce.productService.product.dto.ProductBulkDecreaseRequestDetail;
+import ecommerce.productService.product.dto.ProductBulkIncreaseRequest;
+import ecommerce.productService.product.dto.ProductBulkIncreaseRequestDetail;
+import ecommerce.productService.product.dto.ProductBulkRequest;
+import ecommerce.productService.product.dto.ProductRequest;
+import ecommerce.productService.product.dto.ProductResponse;
 import ecommerce.productService.product.repository.ProductRepository;
+import ecommerce.productService.store.domain.Store;
 import ecommerce.productService.store.repository.StoreRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,7 +28,6 @@ public class ProductService {
 
 	private final ProductRepository productRepository;
 	private final StoreRepository storeRepository;
-	private final ProductEventProducer productEventProducer;
 
 	/**
 	 * 상품을 등록하는 메서드
@@ -238,8 +240,5 @@ public class ProductService {
 		if (!event.getOrderAmount().equals(totalReservedAmount)) {
 			throw new IllegalStateException("총 주문 금액과 상품 총액 불일치: " + totalReservedAmount + " vs " + event.getOrderAmount());
 		}
-
-		// 상품 예약 완료 이벤트 전송
-		productEventProducer.sendProductReservedForOrderEvent(ProductReservedForOrderEvent.from(event.getOrderId()));
 	}
 }
