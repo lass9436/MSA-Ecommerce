@@ -1,11 +1,18 @@
 package ecommerce.payService.pay.domain;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,19 +34,22 @@ public class PayTransaction {
 	@Column(name = "pay_amount", nullable = false)
 	private Long payAmount;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "pay_status", nullable = false)
+	private PayStatus payStatus;
+
 	@Column(name = "pay_at", nullable = false)
 	private LocalDateTime payAt;
 
-	@Column(name = "payment_type", nullable = false, length = 50)
-	private String paymentType;
+	public PayTransaction(Long orderId, Long userSeq, Long payAmount) {
+		this.orderId = orderId;
+		this.userSeq = userSeq;
+		this.payAmount = payAmount;
+		this.payStatus = PayStatus.PENDING;
+		this.payAt = LocalDateTime.now();
+	}
 
-	@Column(name = "payment_name", nullable = false, length = 50)
-	private String paymentName;
-
-	@Column(name = "account_number", nullable = true, length = 50)
-	private String accountNumber;
-
-	@Column(name = "card_number", nullable = true, length = 50)
-	private String cardNumber;
-
+	public void paid() {
+		payStatus = PayStatus.SUCCESS;
+	}
 }

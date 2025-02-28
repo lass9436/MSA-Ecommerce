@@ -35,6 +35,10 @@ public class GatewayConfig {
 			.route("seller-service", r -> r.path("/api/sellers/**")
 				.uri("http://localhost:9020/"))
 
+			// Pay-Service
+			.route("pay-service", r -> r.path("/api/pay/**")
+				.uri("http://localhost:8080/"))
+
 			.build();
 	}
 }
