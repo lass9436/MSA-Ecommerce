@@ -25,7 +25,7 @@ public class PayTransaction {
 	@Column(name = "pay_transaction_id")
 	private Long payTransactionId;
 
-	@Column(name = "order_id", nullable = false)
+	@Column(name = "order_id", nullable = false, unique = true)
 	private Long orderId; // 외래키 저장
 
 	@Column(name = "user_seq", nullable = false)

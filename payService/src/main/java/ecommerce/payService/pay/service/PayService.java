@@ -17,9 +17,9 @@ public class PayService {
 
 	private final PayTransactionRepository payTransactionRepository;
 
-	public PayResponse requestPay(PayRequest request) {
+	public PayResponse requestPay(Long orderId, PayRequest request) {
 		PayTransaction transaction = new PayTransaction(
-			request.getOrderId(),
+			orderId,
 			request.getUserSeq(),
 			request.getAmount()
 		);
@@ -28,11 +28,11 @@ public class PayService {
 		return PayResponse.from(savedTransaction);
 	}
 
-	public PayResponse findById(Long payTransactionId) {
+	public PayResponse findByOrderId(Long orderId) {
 		PayTransaction transaction = payTransactionRepository
-			.findById(payTransactionId)
+			.findById(orderId)
 			.orElseThrow(
-				() -> new EntityNotFoundException("PayTransaction with ID " + payTransactionId + " not found."));
+				() -> new EntityNotFoundException("PayTransaction with Order ID " + orderId + " not found."));
 		return PayResponse.from(transaction);
 	}
 }

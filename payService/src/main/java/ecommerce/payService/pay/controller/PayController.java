@@ -25,18 +25,19 @@ public class PayController {
 
 	private final PayService payService;
 
-	@PostMapping
-	public ApiResult<PayResponse> requestPay(@Login LoginUser user, @RequestBody @Valid PayRequest request) {
+	@PostMapping("{orderId}")
+	public ApiResult<PayResponse> requestPay(@Login LoginUser user, @PathVariable Long orderId,
+		@RequestBody @Valid PayRequest request) {
 		if (!user.getUserSeq().equals(request.getUserSeq())) {
 			return ApiResult.failure(UNAUTHORIZED_ACTION, "Not authorized");
 		}
-		PayResponse response = payService.requestPay(request);
+		PayResponse response = payService.requestPay(orderId, request);
 		return ApiResult.success(response);
 	}
 
-	@GetMapping("/{payTransactionId}")
-	public ApiResult<PayResponse> findPayById(@PathVariable Long payTransactionId) {
-		PayResponse response = payService.findById(payTransactionId);
+	@GetMapping("/{orderId}")
+	public ApiResult<PayResponse> findPayByOrderId(@PathVariable Long orderId) {
+		PayResponse response = payService.findByOrderId(orderId);
 		return ApiResult.success(response);
 	}
 

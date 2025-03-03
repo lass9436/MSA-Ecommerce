@@ -11,10 +11,6 @@ public class PayRequest {
 
 	@NotNull
 	@Positive
-	private Long orderId;
-
-	@NotNull
-	@Positive
 	private Long userSeq;
 
 	@NotNull
