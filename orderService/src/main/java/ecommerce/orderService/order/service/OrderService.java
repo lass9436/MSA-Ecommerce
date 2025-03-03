@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ecommerce.orderService.client.pay.Pay;
+import ecommerce.orderService.client.pay.PayClient;
+import ecommerce.orderService.client.pay.PayStatus;
 import ecommerce.orderService.client.product.Product;
 import ecommerce.orderService.client.product.ProductBulkDecreaseRequest;
 import ecommerce.orderService.client.product.ProductBulkRequest;
@@ -30,6 +33,7 @@ public class OrderService {
 	private final OrderRepository orderRepository;
 	private final ProductClient productClient;
 	private final UserClient userClient;
+	private final PayClient payClient;
 
 	/**
 	 * 주문을 등록하고, 상품의 재고를 차감한 후 주문을 완료 처리하는 메서드입니다.
@@ -161,6 +165,9 @@ public class OrderService {
 	public void paidOrder(Long id) {
 		Order order = orderRepository.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
-		order.paid();
+		Pay pay = payClient.getPayByOrderId(id);
+		if (pay.getPayStatus().equals(PayStatus.SUCCESS)) {
+			order.paid();
+		}
 	}
 }

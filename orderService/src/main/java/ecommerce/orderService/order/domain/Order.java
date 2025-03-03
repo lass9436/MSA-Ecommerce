@@ -139,6 +139,8 @@ public class Order {
 	}
 
 	public void paid() {
-		orderStatus = OrderStatus.PAYMENT_COMPLETED;
+		if (orderStatus.equals((OrderStatus.ORDER_COMPLETED))) {
+			orderStatus = OrderStatus.PAYMENT_COMPLETED;
+		}
 	}
 }
