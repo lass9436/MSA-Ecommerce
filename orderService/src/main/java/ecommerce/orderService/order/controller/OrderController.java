@@ -44,4 +44,9 @@ public class OrderController {
 		return ApiResult.success(orderService.cancelOrder(id));
 	}
 
+	@PatchMapping("{id}/paid")
+	public ApiResult<Void> paidOrder(@PathVariable Long id) {
+		orderService.paidOrder(id);
+		return ApiResult.success(null);
+	}
 }

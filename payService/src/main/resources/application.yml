@@ -6,3 +6,13 @@ spring:
     name: payService
   jpa:
     open-in-view: false
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
+      http2client:
+        enabled: true
+
+api:
+  gateway:
+    url: "https://localhost:9070"

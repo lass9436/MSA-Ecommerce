@@ -1,18 +1,27 @@
 package ecommerce.orderService.order.domain;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import ecommerce.orderService.client.product.Product;
 import ecommerce.orderService.client.product.ProductBulkDecreaseRequest;
 import ecommerce.orderService.client.product.ProductBulkDecreaseRequestDetail;
 import ecommerce.orderService.client.product.ProductBulkIncreaseRequest;
 import ecommerce.orderService.client.product.ProductBulkIncreaseRequestDetail;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -127,5 +136,9 @@ public class Order {
 
 	public void productFailed() {
 		orderStatus = OrderStatus.PRODUCT_FAILED;
+	}
+
+	public void paid() {
+		orderStatus = OrderStatus.PAYMENT_COMPLETED;
 	}
 }

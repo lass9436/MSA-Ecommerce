@@ -158,4 +158,9 @@ public class OrderService {
 		order.productFailed();
 	}
 
+	public void paidOrder(Long id) {
+		Order order = orderRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException("Order not found"));
+		order.paid();
+	}
 }
