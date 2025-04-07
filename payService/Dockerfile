@@ -2,7 +2,7 @@ FROM gradle:8.12.1-jdk21 AS builder
 WORKDIR /app
 COPY --chown=gradle:gradle . .
 
-RUN gradle clean build -x test
+RUN ./gradlew clean build -x test
 
 FROM amazoncorretto:21
 WORKDIR /app
