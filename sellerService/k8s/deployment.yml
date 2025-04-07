@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sellerservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sellerservice
+  template:
+    metadata:
+      labels:
+        app: sellerservice
+    spec:
+      containers:
+        - name: sellerservice
+          image: lass9436/sellerservice:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
