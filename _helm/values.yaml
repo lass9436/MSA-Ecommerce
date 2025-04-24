@@ -1,5 +1,5 @@
 # Replica 설정
-replicaCount: 3               # 배포할 Pod 수 (예: 3개)
+replicaCount: 1               # 배포할 Pod 수 (예: 3개)
 
 namespace: msa
 
@@ -10,10 +10,14 @@ image:
   pullPolicy: Always    # 이미지 Pull 정책 (IfNotPresent, Always 등)
 
 # 서비스 설정
-service:
-  port: 80                    # 클라이언트가 접근하는 Service Port
-  targetPort: 8080            # 내부 Pod에서 포워딩되는 Container Port
-  type: LoadBalancer          # Kubernetes 서비스 타입 (LoadBalancer, ClusterIP, NodePort)
+# values.yaml
+defaultService:
+  type: ClusterIP   # 기본 서비스 타입
+  port: 80          # Default 서비스 포트
+  targetPort: 8080  # 기본적으로 포워딩할 컨테이너 포트
+
+apigateway:
+  type: LoadBalancer
 
 # 환경 변수 (ConfigMap 연동)
 env:

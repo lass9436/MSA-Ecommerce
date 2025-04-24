@@ -7,6 +7,6 @@ spec:
   selector:
     app: {{ .Release.Name }}                     # 차트 이름 기반으로 라벨 선택
   ports:
-    - port: {{ .Values.service.port }}           # values.yaml 에서 서비스 포트 참조
-      targetPort: {{ .Values.service.targetPort }} # values.yaml 에서 타겟 포트 참조
-  type: {{ .Values.service.type }}               # values.yaml 에서 서비스 타입 동적 설정
+    - port: {{ .Values.defaultService.port }}           # values.yaml 에서 서비스 포트 참조
+      targetPort: {{ .Values.defaultService.targetPort }} # values.yaml 에서 타겟 포트 참조
+  type: {{ if eq .Release.Name "apigateway" }}{{ .Values.apigateway.type }}{{ else }}{{ .Values.defaultService.type }}{{ end }}
