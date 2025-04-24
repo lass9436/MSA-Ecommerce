@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  jpa:
+    open-in-view: false
+  cloud:
+    openfeign:
+      okhttp:
+        enabled: true
+      http2client:
+        enabled: false
+
+api:
+  gateway:
+    url: http://apigateway

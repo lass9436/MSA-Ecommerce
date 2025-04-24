@@ -6,36 +6,36 @@ spring:
     gateway:
       routes:
         - id: auth-service
-          uri: http://auth-service
+          uri: http://authservice # 수정
           predicates:
             - Path=/api/auth/**
 
         - id: user-service
-          uri: http://user-service
+          uri: http://userservice # 수정
           predicates:
             - Path=/api/users/**
 
         - id: order-service
-          uri: http://order-service
+          uri: http://orderservice # 수정
           predicates:
             - Path=/api/orders/**
 
         - id: product-service-products
-          uri: http://product-service
+          uri: http://productservice # 수정
           predicates:
             - Path=/api/products/**
 
         - id: product-service-stores
-          uri: http://product-service
+          uri: http://productservice # 수정
           predicates:
             - Path=/api/stores/**
 
         - id: seller-service
-          uri: http://seller-service
+          uri: http://sellerservice # 수정
           predicates:
             - Path=/api/sellers/**
 
         - id: pay-service
-          uri: http://pay-service
+          uri: http://payservice # 수정
           predicates:
             - Path=/api/pay/**

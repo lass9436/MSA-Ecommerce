@@ -1,21 +1,8 @@
-server:
-  port: 9060
-
 spring:
   application:
     name: authService
-  jpa:
-    open-in-view: false
-  cloud:
-    openfeign:
-      okhttp:
-        enabled: true
-      http2client:
-        enabled: true
-
-api:
-  gateway:
-    url: https://localhost:9070
+  profiles:
+    active: ${ENVIRONMENT:dev}
 
 jwt:
   secret: 552925bb-fddf-4b48-8d9f-fe902dcf12fd
