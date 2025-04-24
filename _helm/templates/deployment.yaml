@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}                     # 릴리스 이름으로 Deployment 이름 설정
+spec:
+  replicas: {{ .Values.replicaCount }}          # values.yaml 값을 참조하도록 설정
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}                    # 차트 이름 기반 라벨
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image.user }}/{{ .Release.Name }}:{{ .Values.image.tag }}"  # 컨테이너 이미지 동적 설정
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.port }}                    # 컨테이너 포트 동적 설정
+          env:
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-config                         # 동적 ConfigMap 이름 설정
+                  key: ENVIRONMENT

@@ -1,0 +1,5 @@
+apiVersion: v2            # 필수 - Helm 차트의 API 버전, Helm 3에서는 v2 사용
+name: msa-chart            # 필수 - 차트 이름 (폴더 이름과 일치하지 않아도 됨)
+version: 0.1.0            # 필수 - 차트의 버전 (Semantic Versioning 사용)
+description: A Helm chart for my application # 선택 - 차트에 대한 설명
+appVersion: 1.0.0         # 선택 - 배포되는 애플리케이션의 버전
