@@ -1,6 +1,8 @@
 # Replica 설정
 replicaCount: 3               # 배포할 Pod 수 (예: 3개)
 
+namespace: msa
+
 # 컨테이너 이미지 설정
 image:
   user: lass9436   # 컨테이너 이미지 경로
